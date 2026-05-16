@@ -8,6 +8,7 @@ Memory is what allows an agent to learn and maintain context over time. In late 
 - [Short-Term: The Reasoning Trace](#short-term)
 - [Episodic Memory: Past Experiences](#episodic)
 - [Semantic Memory: The Persona](#semantic)
+- [Procedural Memory: Learned Skills and Workflows](#procedural-memory-learned-skills-and-workflows)
 - [Mem0 and Personalization](#mem0)
 - [Interview Questions](#interview-questions)
 - [References](#references)
@@ -23,7 +24,7 @@ Agents use a tiered approach to storage:
 | **L1** | Working Memory | Context Window / KV Cache | Current task steps, local vars |
 | **L2** | Episodic Memory | Vector DB / Graph | "What did I do last time?" |
 | **L3** | Semantic Memory | SQL / Knowledge Graph | User preferences, "The Truth" |
-
+| **L4** | Procedural Memory | Skills Registry / Tool Policies / Workflow Graph | "How do I perform this task?" |
 ---
 
 ## Short-Term: The Reasoning Trace
@@ -52,6 +53,24 @@ Semantic memory stores "Facts" about the user or the environment.
 
 ---
 
+## Procedural Memory: Learned Skills and Workflows
+
+Procedural memory stores how to do things. While episodic memory answers, “What happened before?” and semantic memory answers, “What is true?”, procedural memory answers:
+
+“What is the correct process for completing this type of task?”
+
+This layer captures reusable skills, tool-use patterns, operating procedures, and workflow preferences.
+
+Examples:
+
+* “When generating a weekly report, first pull metrics from Snowflake, then validate against the dashboard, then summarize anomalies.”
+* “When responding to a customer complaint, classify urgency, retrieve policy, draft response, and escalate if confidence is low.”
+* “When writing SQL, always inspect the schema first, generate a query, run validation, and explain assumptions.”
+
+Procedural memory is especially important for agentic systems because many tasks are not just about remembering facts. They require following the right sequence of actions.
+
+---
+
 ## Mem0 and Agentic Personalization
 
 In late 2025, **Mem0** (and similar frameworks) has become the standard for "Smart Memory."
@@ -72,6 +91,12 @@ Conflicting memories (e.g., the user said "I like blue" last week but says "I li
 
 **Strong answer:**
 First, **Cost and Latency**: Filling 1M tokens of context for every turn is prohibitively expensive even with context caching. Second, **Signal-to-Noise**: Large context windows suffer from "In-context Learning" degradation—the model gets distracted by irrelevant historical turns. A Staff-level architecture uses **Selective Memory Retrieval** (RAG over history) to only pull in the 3-5 most relevant historical interactions, keeping the Reasoning Engine focused on the current sub-goal.
+
+### Q: How would you design procedural memory for a production AI agent?
+
+**Strong answer:**
+
+I would design procedural memory as a combination of a **skills registry, workflow graph, and tool-use policies**. Each procedure would define the task type, required steps, available tools, validation checks, failure modes, and escalation rules. After each run, the agent can perform reflection and update the procedure if it discovers a better approach. For example, if an NL2SQL agent repeatedly fails because it skips schema inspection, we can encode schema inspection as a required first step in the procedural memory for all SQL-generation tasks.
 
 ---
 
