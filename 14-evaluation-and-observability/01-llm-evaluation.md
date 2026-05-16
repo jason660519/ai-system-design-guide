@@ -12,6 +12,7 @@ Evaluating LLM systems is fundamentally different from traditional ML. This chap
 - [RAG-Specific Evaluation](#rag-specific-evaluation)
 - [Building Evaluation Pipelines](#building-evaluation-pipelines)
 - [Production Monitoring](#production-monitoring)
+- [2026 Eval Evolution: Beyond LLM-as-Judge](#2026-eval-evolution-beyond-llm-as-judge)
 - [Interview Questions](#interview-questions)
 - [References](#references)
 
@@ -616,6 +617,140 @@ def detect_quality_drift(
         "p_value": p_value
     }
 ```
+
+---
+
+## 2026 Eval Evolution: Beyond LLM-as-Judge
+
+The 2023-2024 playbook ("use GPT-4 as a judge") was good enough for v1 systems but cracked under three pressures: cost at scale, agent trajectories that string-graders cannot inspect, and benchmarks that conflate retrieval, memory, and reasoning. By May 2026 the production eval stack has split into four layers that work together.
+
+### The Layered Judge Architecture
+
+```mermaid
+flowchart TD
+    A[Production traffic] --> B[Inline cheap distilled judges]
+    B --> C{Pass with high confidence?}
+    C -->|Yes| D[Log score, no further work]
+    C -->|Low confidence or high-stakes| E[Frontier judge calibration batch]
+    E --> F{Disagrees with distilled judge?}
+    F -->|No| G[Update calibration set]
+    F -->|Yes| H[Route to human review]
+    H --> I[Update gold set, retrain distilled judge]
+    G --> J[Periodic distilled judge refresh]
+    I --> J
+```
+
+The cost math forces this shape: serving frontier judges (Claude Opus 4.7, GPT-5, Gemini Ultra 3) on every production trace is unaffordable above ~100K req/day. Distilled judges run hot, frontier judges calibrate, humans set ground truth.
+
+### Galileo Luna-2: Distilled Judges at Scale
+
+[Galileo's Luna-2 family](https://www.galileo.ai/luna-2) (released February 2026) is a set of small, task-specific judge models trained on millions of frontier-judge labels plus human annotations. Galileo's published numbers:
+
+| Metric | Luna-2 vs Frontier Judge |
+|--------|--------------------------|
+| Cost per evaluation | ~97% lower |
+| Latency P50 | ~10x lower (sub-100ms for short responses) |
+| Agreement with frontier judge | 88-92% across published benchmarks |
+| Agreement with human gold labels | Within 2-3 points of the frontier judge |
+
+The catch is the **shape** of the disagreement. Luna-2 is trained on a fixed taxonomy of failure modes (groundedness, instruction-following, toxicity, PII, off-topic, refusal). Anything outside that taxonomy regresses to a default score. So the pattern that holds up in production is:
+
+- **Use Luna-2 (or a Luna-equivalent) inline** on every trace for the taxonomy it covers.
+- **Use the frontier judge** on a sampled 1-5% of traces to detect drift between the distilled judge and the larger model.
+- **Fall back to frontier** automatically when the distilled judge returns low confidence (Luna-2 emits a confidence score, not just a label).
+- **Never trust the distilled judge alone for novel failure modes** that were not in its training distribution: a freshly-released attack vector, a new category of user intent, or a domain-specific factuality check.
+
+Galileo's [public technical report](https://www.galileo.ai/research/luna-2) walks through the distillation recipe and where Luna-2 still under-performs frontier judges (long-horizon multi-step reasoning, low-resource languages).
+
+Other shipped distilled judges to compare against:
+
+- [Patronus AI Lynx](https://www.patronus.ai/lynx) for groundedness, similar cost profile.
+- [Vectara HHEM-2](https://www.vectara.com/blog/hhem) for hallucination detection.
+- [Arize Phoenix Evals](https://arize.com/docs/phoenix/) which ships open distilled judges plus calibration harness.
+
+### Sierra tau2-bench and Variants
+
+[Sierra's tau-bench](https://github.com/sierra-research/tau-bench) (2024) was the first realistic agent benchmark that measured tool-use success in a simulated business environment. The 2026 successors generalize that idea.
+
+[tau2-bench](https://github.com/sierra-research/tau-bench) (released Q1 2026) is a major update:
+
+- **More domains**: retail, airline, financial, healthcare, telecom.
+- **Pass^k metric**: measures the probability that the agent succeeds on **all** k repeated trials of the same task. Pass^1 is the traditional success rate. Pass^4 is what tells you whether the agent is reliable.
+- **Verifier-based grading**: deterministic post-conditions (the order is canceled, the refund exists, the seat is changed) rather than LLM-graded transcript scoring.
+
+Sister benchmarks:
+
+- **[tau-Voice](https://sierra.ai/blog/tau-voice)**: speech-to-speech variant where the agent operates over voice channels. Catches a class of failures (timing, interruption handling, recovery from ASR errors) that text-only benchmarks miss entirely.
+- **[tau-Knowledge](https://sierra.ai/blog/tau-knowledge)**: extends the simulation with an internal knowledge base the agent must retrieve from. Decouples "does the agent retrieve" from "does the agent act."
+
+In practice, the pass^k metric is the most actionable. A Pass^1 of 70% and a Pass^4 of 12% says "the agent works on the easy path but cannot recover from any small perturbation." That is exactly the signal production teams need before rolling out an agent at scale.
+
+### Agent-as-Judge: Trajectory Grading
+
+LLM-as-judge scored the final answer. Agent-as-judge scores the **trajectory**: the sequence of tool calls, intermediate states, retries, and reasoning steps the agent went through.
+
+This is necessary because long-horizon agents fail in ways the final answer cannot reveal:
+
+- **Right answer, wrong reasoning**: the agent guessed the right number after a botched calculation.
+- **Right answer, dangerous path**: the agent tried four destructive tool calls before a fifth (safe) one happened to succeed.
+- **Right answer, runaway cost**: the agent made 47 retrieval calls when 2 would have sufficed.
+
+The pattern in production:
+
+- **Process Reward Models (PRMs)** score each step in the trajectory independently. PRMs were originally trained for math (OpenAI's [Let's Verify Step by Step](https://arxiv.org/abs/2305.20050)) and have generalized: by 2026 there are PRMs for code, tool-use trajectories, and multi-turn dialogue.
+- **An auxiliary "auditor" agent** (often a different model from the one being graded) replays the trajectory, asks "was this step justified?" at each node, and emits a graded transcript. This is what the [DeepMind agent-as-judge paper](https://arxiv.org/abs/2410.10934) (Oct 2024, refined through 2026) formalized.
+- **Trajectory failure modes** that show up in this kind of grading:
+  - **Reasoning-action mismatch**: the agent's chain-of-thought says one thing, the tool call does another.
+  - **Over-retrieval**: more retrieval calls than needed.
+  - **Tool flailing**: trying the same tool with slight variations until something works.
+  - **Premature commitment**: writing the answer before all evidence is in.
+  - **Self-jailbreaking**: the agent's own intermediate reasoning bypasses its own safety policy.
+
+The [Anthropic Constitutional Classifiers paper](https://www.anthropic.com/research/constitutional-classifiers) (Jan 2025) and follow-up work shows that judging trajectories with a constitutional classifier catches a meaningful fraction of safety failures that final-answer grading misses entirely.
+
+### HaluMem: Operation-Level Hallucination Benchmark
+
+[HaluMem](https://arxiv.org/abs/2511.03506) (November 2025) is the first benchmark to break hallucination evaluation into the **operations** that produce or use memory, not just the final answer:
+
+| Stage | What Is Measured | Typical Failure |
+|-------|------------------|-----------------|
+| Extraction | The fact written to memory matches the source | The agent stored "user is allergic to peanuts" when the source said "user dislikes peanuts" |
+| Update | A memory update is correct relative to prior state | A new memory contradicts an older memory without resolution |
+| QA | The answer is grounded in stored memories | The agent answers from parametric knowledge while pretending to cite memory |
+
+The big insight from the HaluMem paper: a system can hit very high QA accuracy on standard hallucination benchmarks while making catastrophic extraction errors. Aggregate metrics hide the stage where the error originates, which is the only stage you can actually fix.
+
+The practical recipe:
+
+- Instrument the memory layer with **per-operation evals**: every write, update, and read has a separate eval.
+- Use a distilled judge (Luna-2 or similar) per operation type.
+- Track each stage's error rate over time; a 5% extraction error compounds over thousands of operations into a wholly unreliable agent.
+
+### A Production Eval Stack in May 2026
+
+A defensible stack for a customer-facing agent product looks roughly like:
+
+```mermaid
+flowchart LR
+    A[User turn] --> B[Agent runs]
+    B --> C[Trajectory logged]
+    C --> D[Distilled judges run inline on each tool call and the final answer]
+    D --> E[Per-step PRM trajectory score]
+    E --> F[Auditor agent on 1-5 percent sample]
+    F --> G[Frontier judge on flagged or high-stakes traces]
+    G --> H[Human review on disagreements]
+    H --> I[Gold set update]
+    I --> J[Distilled judge retraining quarterly]
+```
+
+This is not free, but it is dramatically cheaper than running a frontier judge on every trace, and it catches failure classes (process errors, memory errors, trajectory errors) that pure final-answer grading cannot see.
+
+### Take-Aways for Interviews
+
+- "LLM-as-judge" is now the worst-case fallback, not the default.
+- The serious teams stack **distilled judges inline + frontier judges for calibration + human review for ground truth**.
+- For agents, **judge the trajectory, not just the answer**. Pass^k, PRMs, and agent-auditors are how.
+- For memory-equipped systems, **measure extraction, update, and QA separately**; aggregate accuracy hides the failure site.
 
 ---
 

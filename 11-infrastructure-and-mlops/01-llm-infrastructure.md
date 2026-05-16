@@ -10,6 +10,7 @@ Building production LLM systems requires understanding deployment options, scali
 - [Cost Management](#cost-management)
 - [Monitoring and Alerting](#monitoring-and-alerting)
 - [Disaster Recovery](#disaster-recovery)
+- [May 2026 AI Accelerator Landscape](#may-2026-ai-accelerator-landscape)
 - [Interview Questions](#interview-questions)
 - [References](#references)
 
@@ -447,6 +448,141 @@ class GracefulDegradation:
             metadata={"source": "error", "degraded": True}
         )
 ```
+
+---
+
+## May 2026 AI Accelerator Landscape
+
+The hardware picture has shifted faster between January and May 2026 than at any previous moment in the AI build-out. The capacity announcements add up to **over a trillion dollars in committed cloud spend** and the supply chain is no longer single-vendor. This section is the snapshot a senior architect should be carrying into capacity-planning conversations in May 2026.
+
+### NVIDIA Blackwell Ultra (B300 / GB300 NVL72)
+
+The flagship is the **B300** ("Blackwell Ultra"), shipping in volume since January 2026 ([NVIDIA newsroom announcement](https://nvidianews.nvidia.com/news/nvidia-blackwell-ultra-ai-factory-platform-paves-way-for-age-of-ai-reasoning)).
+
+| Spec | B300 / GB300 NVL72 |
+|------|---------------------|
+| HBM3e per GPU | 288 GB |
+| Peak FP4 (sparse) | ~15 PFLOPS |
+| Form factor | NVL72 rack: 72 Blackwell Ultra GPUs + 36 Grace CPUs |
+| Aggregate NVLink bandwidth in NVL72 | ~130 TB/s |
+| Total HBM per NVL72 | ~20 TB |
+| Projected racks shipping in 2026 | ~60,000 (Jensen Huang, GTC 2026 keynote) |
+
+The strategic pitch is "AI factories": the NVL72 is sold as the smallest unit of a coherent, NVLink-domain inference / training cell rather than as individual cards. For frontier model training (Anthropic, OpenAI, Google's external work) and the largest reasoning-model inference workloads, this is still the default in May 2026.
+
+The trade-off has stayed the same: highest absolute performance, highest absolute price, deepest software lock-in. CUDA, NCCL, and TensorRT-LLM all assume NVIDIA. If you architect around them, you have committed.
+
+### AMD MI400 and Helios Rack
+
+[AMD's MI400](https://ir.amd.com/news-events/press-releases/detail/1252/amd-introduces-fifth-generation-instinct-mi400-series) (announced Q4 2025, sampling Q1 2026, GA mid-2026) is the credible second source.
+
+| Spec | MI400 |
+|------|-------|
+| Memory | HBM4, **432 GB** per GPU |
+| Memory bandwidth | ~20 TB/s |
+| Peak FP4 | ~13 PFLOPS |
+| Rack solution | **Helios**: EPYC Venice CPUs, MI400 GPUs, Pensando Vulcano 800Gb NICs |
+| Software | ROCm 7.x with PyTorch / vLLM / SGLang first-class support |
+
+The 432 GB per GPU is the headline: it sits more than 50% above the B300's 288 GB. For MoE serving (where the limiting factor is keeping expert weights resident) and for KV-cache-heavy long-context workloads, the per-GPU memory advantage is real. AMD has also closed most of the software gap; ROCm 7.x is no longer the disqualifier it was in 2023. Open-source serving frameworks routinely test on both.
+
+The catch: **production deployment maturity**. NVIDIA has shipped at scale to every hyperscaler for two generations; AMD is still ramping the volume side of the supply chain. Hyperscalers (Meta, Microsoft, Oracle Cloud, and notably the AWS Trainium fleet for non-Trainium workloads) are running mixed fleets.
+
+### AWS Trainium3 and the Anthropic $100B+ Deal
+
+In November 2025, Anthropic and AWS announced an expansion to **up to 5 gigawatts** of compute capacity through 2026, anchored on Trainium chips and described as a **"$100B+" deal** ([AWS news release](https://press.aboutamazon.com/2025/11/anthropic-and-aws-announce-100-billion-strategic-partnership-investment-to-expand-trainium-compute-and-collaborate-on-ai-frontier-research)).
+
+Key numbers:
+
+| Spec | Trainium3 |
+|------|-----------|
+| Process node | 3nm |
+| Configuration | **Trn3 UltraServer** with **144 chips** per system |
+| Peak perf vs T2 | **~4.4x** in target workloads |
+| Memory | HBM3e |
+| Networking | NeuronLink across the UltraServer; EFA across the cluster |
+
+The strategic implication: AWS now has a credible vertically-integrated AI fabric (Trainium silicon + Annapurna networking + EC2 + Bedrock). For inference-heavy workloads on Anthropic models, the price/performance is competitive with NVIDIA on H200-class hardware and improving toward B300 parity by end of 2026.
+
+The constraint: Trainium runs the **AWS Neuron SDK**, not CUDA. Porting a stack means rebuilding kernels, retesting numerics, and re-tuning batching. Worth it at scale, painful at small scale.
+
+### Cerebras IPO (May 2026)
+
+Cerebras priced its IPO on **May 14, 2026** at **$185/share** and raised roughly **$5.55B**, opening above $190 and closing the first day near a **~$100B** valuation ([CNBC coverage](https://www.cnbc.com/2026/05/14/cerebras-ipo-priced.html); [The Register](https://www.theregister.com/2026/05/15/cerebras_ipo/)).
+
+What changed in the market because of it:
+
+- **AWS partnered with Cerebras** for high-throughput inference ([AWS / Cerebras blog post](https://aws.amazon.com/blogs/machine-learning/cerebras-on-aws/)). The pitch is Trainium3 for serving Anthropic and other in-house workloads, Cerebras for ultra-low-latency Llama / OSS workloads.
+- The CS-3 wafer-scale engine remains the only credible option for **single-chip, single-replica inference of a 70B+ model** at <50ms TTFT.
+- The Cerebras Cloud API has been used as a quick second source for teams whose primary stack is GPU-based and want a latency edge without porting.
+
+The IPO is structurally important because it changes the financing thesis: there is now a public-market path for a non-NVIDIA inference vendor, which makes it cheaper for the next entrants to raise.
+
+### Tenstorrent Galaxy Blackhole
+
+[Tenstorrent's Galaxy](https://tenstorrent.com/hardware/galaxy) reached general availability on **April 28, 2026** ([The Register](https://www.theregister.com/2026/04/28/tenstorrent_galaxy_ga/); [EE Times](https://www.eetimes.com/tenstorrent-launches-blackhole-galaxy/)).
+
+| Spec | Galaxy Blackhole |
+|------|------------------|
+| Per-server | **32 Blackhole chips** |
+| Per-chip | RISC-V cores, Tensix tiles, no external memory hierarchy |
+| Peak BlockFP8 | **~23 PFLOPS** per server |
+| Memory | LPDDR4X (chip-attached) + on-chip SRAM |
+| List price | **~$110,000** per 32-chip server |
+| Architecture | Fully open RISC-V control plane, open firmware, open compiler |
+
+The open-source RISC-V story matters for two audiences:
+
+- **Hyperscalers and sovereign clouds** that want a non-CUDA stack with full visibility into firmware and toolchain.
+- **Research labs** building custom kernels who hit walls with CUDA's closed bits.
+
+At $110K per server, Galaxy is roughly an order of magnitude cheaper than a comparable NVIDIA inference rack for some workloads. It is not a frontier-training competitor. It is an inference and small-fine-tuning competitor where the per-dollar argument is overwhelming.
+
+### Stargate and the Scale of Cloud Commitments
+
+The capacity story is no longer just about chips; it is about the buildings around them.
+
+- **Stargate** (OpenAI / Oracle / SoftBank joint venture) has committed roughly **$1.4 trillion in total cloud spend** across the program ([OpenAI announcement page](https://openai.com/index/stargate-update/)).
+- The **Abilene, Texas** flagship site is online at **1.2 GW** as of Q1 2026, with multi-gigawatt expansions under construction across **seven announced sites** totaling roughly **7 GW** of planned capacity.
+- Over **$400B** has already been invested or contracted toward this footprint per public filings and announcements (Oracle Q3 FY26 earnings, [SoftBank investor materials](https://group.softbank/en/ir)).
+
+The architectural implication for senior engineers: the marginal cost of inference for frontier-model providers is dropping faster than the public API pricing would suggest. Spot capacity, off-peak inference batching, and multi-region failover are all easier in 2026 because the underlying buildings exist.
+
+### A Three-Tier Fleet Strategy
+
+```mermaid
+flowchart TD
+    A[Production AI workload] --> B{What is the dominant constraint?}
+    B -->|Frontier training, max FLOPS, NVLink coherency| C[Tier 1: Training and Heavy Compute]
+    B -->|Cost per token, throughput, MoE serving| D[Tier 2: High-Throughput Inference]
+    B -->|Edge, latency, sovereignty, open stack| E[Tier 3: Edge and Specialty]
+
+    C --> C1[B300 NVL72 racks]
+    C --> C2[MI400 Helios racks for MoE training]
+
+    D --> D1[Trainium3 UltraServers for Anthropic workloads]
+    D --> D2[MI400 for memory-bound inference]
+    D --> D3[Cerebras CS-3 for single-replica low-latency]
+
+    E --> E1[Tenstorrent Galaxy for cheap inference]
+    E --> E2[Apple Silicon / consumer GPUs for on-device]
+    E --> E3[Groq LPU for specific low-latency niches]
+```
+
+| Tier | What It Serves | Default Hardware | Why |
+|------|----------------|-------------------|-----|
+| **Tier 1: Training and Heavy Compute** | Frontier model training, reasoning-heavy inference, multi-trillion-parameter MoE | **B300 NVL72**, **MI400 Helios** | Need NVLink-class coherency and the largest HBM pools available |
+| **Tier 2: High-Throughput Inference** | API products, RAG backends, agent platforms | **Trainium3**, **MI400**, **Cerebras CS-3**, **B300** | Optimize for cost per token and predictable P99, often MoE-aware |
+| **Tier 3: Edge and Specialty** | Latency-critical, sovereign, open-source-firmware mandated, low total spend | **Tenstorrent Galaxy**, **Apple Silicon**, consumer GPUs, **Groq LPU** | $/perf, open stack, regulatory locality |
+
+The framing that matters in 2026: **no senior architect designs a serious AI product around a single vendor anymore**. The capacity is too contested, the price moves too fast, and the failure modes are too correlated within a single vendor's stack. Multi-vendor is the new default.
+
+### Take-Aways for Capacity Planning
+
+- Plan around **memory per accelerator** as much as FLOPS. MoE serving is bottlenecked on expert residency.
+- Treat **CUDA lock-in as a real cost**. ROCm 7.x is good enough for most production serving. Neuron is good enough for Anthropic and any team willing to do the porting work. Open RISC-V is good enough for cost-sensitive inference.
+- The hyperscaler choice now drives the chip choice as much as the other way around. AWS = Trainium + Cerebras + some NVIDIA. Microsoft = NVIDIA + Maia. Google = TPU + some NVIDIA. Oracle = NVIDIA at scale.
+- **$/token** has been falling roughly 3-5x per year through 2025 and 2026 ([a16z State of AI Compute](https://a16z.com/state-of-ai-compute-2026/)). Long-term contracts at 2024 prices are now usually a worse deal than spot.
 
 ---
 

@@ -9,6 +9,7 @@ While LangChain focuses on "Orchestration," **LlamaIndex** is the master of **Da
 - [Advanced Indexing: Beyond Vector Search](#indexing)
 - [LlamaCloud and Managed Ingestion](#llamacloud)
 - [Agents as Tools](#agents-as-tools)
+- [LlamaIndex Workflows: Event-Driven Application Framework (2026)](#llamaindex-workflows-event-driven-application-framework-2026)
 - [Interview Questions](#interview-questions)
 - [References](#references)
 
@@ -60,6 +61,102 @@ For enterprise scale, LlamaIndex focuses on **LlamaCloud**.
 LlamaIndex treats agents as **high-level retrievers**.
 - You can "wrap" a complex LlamaIndex query engine as a tool and give it to a LangGraph agent.
 - **Benefit**: The agent gets "Smart Data Access" without needing to know the technical details of the vector DB or Graph schema.
+
+---
+
+## LlamaIndex Workflows: Event-Driven Application Framework (2026)
+
+The pitch in 2024 was "Workflows is our LangGraph." The pitch in 2026 is different: Workflows is a general-purpose event-driven framework for any AI application, with RAG as one possible use. The 1.x line of `llama-index-core` ships Workflows as the primary application surface, while the index / retriever classes have moved into integration packages around it ([LlamaIndex workflows docs](https://developers.llamaindex.ai/python/framework/understanding/workflows/)).
+
+### What Changed Architecturally
+
+| Dimension | Pre-Workflows LlamaIndex | Workflows-First LlamaIndex (2026) |
+|-----------|--------------------------|-----------------------------------|
+| Primary abstraction | Query engine, chat engine | `Workflow` class with `@step` methods |
+| Control flow | Linear; nested query engines | Steps consume / emit typed `Event` subclasses |
+| State | Implicit in engine instances | Explicit `Context` with serializable state |
+| Concurrency | Cooperative via async query engines | First-class: emit several events, fan out, join |
+| Persistence | None | Context can be `pickle`d or stored as JSON for resume |
+| Streaming | Per-engine | `ctx.write_event_to_stream()` from any step |
+| Human-in-the-loop | Manual | `InputRequiredEvent` / `HumanResponseEvent` pattern |
+
+### The Event-Driven Mental Model
+
+```python
+from llama_index.core.workflow import (
+    Workflow, step, Event, StartEvent, StopEvent, Context
+)
+
+class RetrievedEvent(Event):
+    nodes: list
+
+class JudgedEvent(Event):
+    nodes: list
+    keep: bool
+
+class GraphRAG(Workflow):
+    @step
+    async def plan(self, ctx: Context, ev: StartEvent) -> RetrievedEvent:
+        await ctx.set("query", ev.query)
+        nodes = await self.retriever.aretrieve(ev.query)
+        return RetrievedEvent(nodes=nodes)
+
+    @step
+    async def judge(self, ctx: Context, ev: RetrievedEvent) -> JudgedEvent:
+        keep = await self.relevance_judge(ev.nodes, await ctx.get("query"))
+        return JudgedEvent(nodes=ev.nodes, keep=keep)
+
+    @step
+    async def answer(self, ctx: Context, ev: JudgedEvent) -> StopEvent:
+        if not ev.keep:
+            return StopEvent(result="No good evidence found.")
+        return StopEvent(result=await self.llm.acomplete(...))
+```
+
+Two properties fall out of this design:
+
+1. The engine dispatches purely on **event type**, so adding a new branch is adding a new `Event` subclass and a step that consumes it. No central router to edit.
+2. **Concurrency is data-driven**: a step that emits three `RetrievedEvent`s automatically fans out three downstream `judge` invocations, and the joining step collects them with `ctx.collect_events`.
+
+### Workflows vs LangGraph
+
+```mermaid
+flowchart LR
+    A[Need stateful multi-step LLM app] --> B{What is the dominant complexity?}
+    B -->|Data ingestion, parsing, retrieval, indexing| C[LlamaIndex Workflows]
+    B -->|Multi-agent reasoning, supervisor patterns, HITL approvals| D[LangGraph]
+    B -->|Both, equal weight| E[Use both: LlamaIndex for the RAG/data side as a tool inside LangGraph]
+    C --> F[Smaller graph surface, integrates LlamaParse / LlamaCloud natively]
+    D --> G[Typed state, time-travel debugging, mature checkpoint store]
+```
+
+| Dimension | LlamaIndex Workflows (1.x) | LangGraph (1.x) |
+|-----------|----------------------------|-----------------|
+| Control flow primitive | Event dispatch | Graph nodes and edges, plus a typed reducer state |
+| State model | Free-form `Context` (dict-like) | Pydantic / TypedDict state with reducers |
+| Resume / time travel | Pickleable context, basic resume | First-class checkpoints, branch from any node ([LangGraph persistence docs](https://docs.langchain.com/oss/python/langgraph/persistence)) |
+| Native integrations | LlamaParse, LlamaCloud, all LlamaHub loaders | LangSmith eval, all LangChain integrations |
+| Best-fit complexity | Data-shaped: parse, embed, retrieve, refine | Logic-shaped: plan, act, reflect, delegate |
+| Multi-agent helpers | `AgentWorkflow`, function-calling agents ([LlamaIndex AgentWorkflow](https://developers.llamaindex.ai/python/framework/understanding/agent/multi_agent/)) | `create_supervisor`, `create_react_agent`, swarm patterns |
+| Streaming UI | `ctx.write_event_to_stream` + AG-UI protocol | `astream_events` v2, AG-UI protocol |
+
+When you should reach for LlamaIndex Workflows over LangGraph:
+
+- The hard part is **data ingestion**, not reasoning. LlamaCloud, LlamaParse, and the property-graph stack are all native, not adapter-bridged ([LlamaCloud overview](https://www.llamaindex.ai/llamacloud)).
+- You want **document-driven parallelism**: parse 1000 PDFs, fan out an embedding step per chunk, join into one index update.
+- You are building inside the **TypeScript** ecosystem on `llama-index-ts` and want feature parity with the Python core.
+
+When LangGraph wins:
+
+- The hard part is the **agent control loop** itself: many agents, supervisor patterns, durable interrupts, replay.
+- You need **time-travel debugging** out of the box. LlamaIndex resume is good for crash recovery but not for branching from an arbitrary historical state the way LangGraph checkpoints do.
+- You are already on the LangSmith eval stack and want trace-level integration without bridging.
+
+### Real-World Posture in 2026
+
+Plenty of senior architectures run both: LlamaIndex Workflows for the data plane (ingestion, indexing, hybrid retrieval, reranking) wrapped as a tool, and LangGraph for the agent control plane on top. This is the pattern called out in the [AIMultiple framework comparison](https://research.aimultiple.com/agentic-ai-frameworks/) and in LlamaIndex's own [hybrid integration cookbook](https://developers.llamaindex.ai/python/framework/understanding/workflows/).
+
+If you only pick one for a new greenfield app, the question reduces to: **is your team going to spend more time on data plumbing or on agent orchestration?** The answer drives the framework.
 
 ---
 
