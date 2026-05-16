@@ -54,26 +54,34 @@ Committed (1-year): $2.00 / 1M input tokens (20% savings)
 
 ## Current API Pricing
 
-### April 2026 Pricing
+### May 2026 Pricing
 
-> **Last verified: April 2026.** Prices change frequently. Always re-check: [OpenAI](https://developers.openai.com/api/docs/pricing), [Anthropic](https://platform.claude.com/docs/en/about-claude/pricing), [Google](https://ai.google.dev/gemini-api/docs/pricing), [xAI](https://docs.x.ai/developers/models)
+> **Last verified: May 17, 2026.** Prices change frequently. Always re-check: [OpenAI](https://developers.openai.com/api/docs/pricing), [Anthropic](https://platform.claude.com/docs/en/about-claude/pricing), [Google](https://ai.google.dev/gemini-api/docs/pricing), [xAI](https://docs.x.ai/developers/models), [DeepSeek](https://api-docs.deepseek.com/quick_start/pricing)
+>
+> **Deprecations effective in 2026:** OpenAI retired GPT-4o, GPT-4.1, GPT-4.1-mini, o4-mini from ChatGPT on Feb 13, 2026; gpt-5.2-chat-latest and gpt-5.3-chat-latest deprecated May 8, 2026; Realtime API Beta removed May 12, 2026; Sora app shut down April 26, 2026 (API EOL Sep 24, 2026). Google Vertex retired `gemini-3-pro-preview` Mar 26, 2026; Project Mariner shut down May 4, 2026. Gemini 2.5 Pro/Flash deprecated June 17, 2026.
 
 #### OpenAI (GPT-5.x Generation)
 | Model | Input / 1M | Output / 1M | Notes |
 |-------|------------|-------------|-------|
+| **GPT-5.5** ⭐ NEW | $5.00 | $30.00 | Released April 23, 2026. 1M context. New class of multimodal flagship. |
+| **GPT-5.5 Instant** ⭐ NEW | check latest | check latest | Default in ChatGPT and `chat-latest` since May 5, 2026. 52.5% fewer hallucinations on high-stakes prompts. |
+| **GPT-Realtime-2** ⭐ NEW | $32.00 (audio) | $64.00 (audio) | Released May 7, 2026. GPT-5-class realtime voice. |
+| **GPT-Realtime-Translate** ⭐ NEW | (audio pricing) | (audio pricing) | 70+ input → 13 output languages. |
 | **GPT-5.4 Pro** | $30.00 | $180.00 | Maximum reasoning; long-context doubles to $60/$270 |
 | **GPT-5.4** | $2.50 | $15.00 | Flagship; native computer use; cached input $1.25 |
 | **GPT-5.4-mini** | $0.75 | $4.50 | Best cost/performance in GPT-5 tier |
 | **GPT-5.4-nano** | check latest | check latest | Smallest GPT-5.4 variant; released March 2026 |
-| **GPT-4o** | $2.50 | $10.00 | Previous gen; still widely deployed |
-| **GPT-4o-mini** | $0.15 | $0.60 | Previous gen; high-volume legacy |
+| **GPT-4o** | $2.50 | $10.00 | Retired from ChatGPT Feb 13, 2026; API access varies |
+| **GPT-4o-mini** | $0.15 | $0.60 | Legacy; check API availability |
 
 #### Anthropic (Claude 4.x Generation)
 | Model | Input / 1M | Output / 1M | Context | Notes |
 |-------|------------|-------------|---------|-------|
+| **Claude Opus 4.7** ⭐ NEW | $5.00 | $25.00 | 1M | Released April 16, 2026 on API, Bedrock, Vertex, Microsoft Foundry. Higher-resolution vision, improved SWE. |
 | **Claude Opus 4.6** | $5.00 | $25.00 | 1M | 128K max output; adaptive thinking at standard rates |
 | **Claude Sonnet 4.6** | $3.00 | $15.00 | 1M | Covers most Opus-level tasks at lower cost |
 | **Claude Haiku 4.5** | $1.00 | $5.00 | 200K | Fastest Anthropic model; check latest for exact price |
+| **Claude Mythos Preview** | n/a | n/a | - | Restricted to ~11 Project Glasswing partners; not generally available. |
 
 > [!NOTE]
 > **Claude 1M context at standard pricing**: Opus 4.6 and Sonnet 4.6 include the full 1M token context window at standard rates -- no premium tier for long context. Batch API offers 50% discount. Cache hits cost 10% of standard input price.
@@ -93,22 +101,30 @@ Committed (1-year): $2.00 / 1M input tokens (20% savings)
 |-------|------------|-------------|---------|-------|
 | **Grok 4** | $3.00 | $15.00 | 256K | Native tool use; real-time search |
 | **Grok 4.1 Fast** | $0.20 | $0.50 | 2M | High-volume, low-cost |
-| **Grok 3 mini** | check latest | check latest | — | Faster, less accurate |
+| **Grok 3 mini** | check latest | check latest | - | Faster, less accurate |
 
-#### Open-Weight Models via API (April 2026)
+#### Open-Weight Models via API (May 2026)
 | Model | Input / 1M | Output / 1M | Context | Provider Examples |
 |-------|------------|-------------|---------|-------------------|
-| **Llama 4 Scout** | $0.11 | $0.34 | 10M | Together AI, Groq, Fireworks |
-| **Llama 4 Maverick** | $0.27 | $0.85 | 1M | Together AI, Groq, Fireworks |
+| **DeepSeek-V3.2** | $0.28 | $0.42 | 128K | DeepSeek API. 98% cache-hit discount; 50% off-peak discount. Effective rates can drop 10–30× via routing. |
+| **DeepSeek V4 Pro** ⭐ NEW | check latest | check latest | 1M | DeepSeek API (preview). ~27% compute / 10% memory of V3.2 at 1M tokens. |
+| **DeepSeek V4 Flash** ⭐ NEW | check latest | check latest | 1M | DeepSeek API (preview). 13B-active MoE; high-throughput tier. |
+| **Mistral Medium 3.5** ⭐ NEW | $1.50 | check latest | 256K | Mistral API. Unified chat/reasoning/coding/vision; 77.6% SWE-Bench Verified. |
+| **Kimi K2.6** ⭐ NEW | check latest | check latest | - | Moonshot API. 1T MoE / 32B active; agent swarm to 300 sub-agents. |
+| **Qwen 3.6-35B-A3B** ⭐ NEW | check latest | check latest | - | Apache 2.0 weights; self-host or via API providers. |
+| **Llama 4 Scout** | $0.11 | $0.34 | 10M | Together AI, Groq, Fireworks. Note: effective context degrades fast past 32K. |
+| **Llama 4 Maverick** | $0.27 | $0.85 | 1M | Together AI, Groq, Fireworks. MoE-aware serving required. |
 | **DeepSeek-V3** | $0.25 | $1.10 | 128K | DeepSeek API, Together AI |
 | **DeepSeek-R1** | $0.55 | $2.19 | 128K | DeepSeek API |
 | **Mistral Large 3** | $0.50 | $1.50 | 256K | Mistral API, AWS Bedrock |
 | **Llama 3.3 70B** | ~$0.10–0.20 | ~$0.30–0.60 | 128K | Groq, Together AI |
 | **Qwen2.5-Coder-32B** | ~$0.50 | ~$1.00 | 32K | Together AI |
+| **Gemma 4 (31B / 26B-A4B MoE / E4B / E2B)** ⭐ NEW | self-host | self-host | 256K | Apache 2.0. 140+ languages; native vision/audio; function calling. |
 
-#### Embedding Models (April 2026)
+#### Embedding Models (May 2026)
 | Model | Cost / 1M tokens | Dimension |
 |-------|------------------|-----------|
+| **Cohere Embed 4** ⭐ NEW | $0.10 | 256 / 512 / 1024 / 1536 (Matryoshka) |
 | **text-embedding-3-large** | $0.13 | 3072 |
 | **text-embedding-3-small** | $0.02 | 1536 |
 | **Voyage-3** | $0.06 | 1024 |

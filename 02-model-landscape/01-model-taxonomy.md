@@ -1,8 +1,10 @@
 # Model Taxonomy
 
-This chapter provides a comprehensive guide to the model landscape as of **April 2026**, covering model families, capabilities, and selection criteria for production systems.
+This chapter provides a comprehensive guide to the model landscape as of **May 2026**, covering model families, capabilities, and selection criteria for production systems.
 
-> **Last verified: April 2026.** The model landscape evolves rapidly. Always cross-check with provider pricing pages and release notes.
+> **Last verified: May 17, 2026.** The model landscape evolves rapidly. Always cross-check with provider pricing pages and release notes.
+>
+> **May 2026 - what's new since the April refresh:** OpenAI GPT-5.5 (April 23) and GPT-5.5 Instant (May 5, default in ChatGPT); Claude Opus 4.7 (April 16, GA on Bedrock/Vertex/Foundry); Claude Mythos Preview (restricted; Project Glasswing partners only); Google Gemma 4 (April 2, Apache 2.0) and Gemini 3.2 Flash (quiet rollout May 5); DeepSeek V4 Pro and V4 Flash preview (April 24); Moonshot Kimi K2.6 (April 20, 1T MoE / 32B active); Alibaba Qwen 3.6 Plus / 3.6-35B-A3B / 3.6 Max-Preview; Mistral Medium 3.5 (April 29, unified chat/reasoning/coding/vision); Meta Muse Spark (April 8, first closed-weight Meta model); Llama 4 Behemoth release paused through fall 2026 amid capability concerns. SWE-bench Verified leader: Claude Mythos Preview 93.9%; ARC-AGI-2 leader: GPT-5.5 at 85.0%.
 
 ## Table of Contents
 
@@ -42,7 +44,34 @@ This chapter provides a comprehensive guide to the model landscape as of **April
 
 ---
 
-## Frontier Models (April 2026)
+## Frontier Models (April–May 2026)
+
+### Claude Opus 4.7 (Anthropic) - May 2026 NEW
+
+| Attribute | Value |
+|-----------|-------|
+| Context Window | 1M tokens |
+| Max Output | 128K tokens |
+| Input Cost | $5.00 / 1M tokens (same as 4.6) |
+| Output Cost | $25.00 / 1M tokens (same as 4.6) |
+| Extended Thinking | Native, Adaptive mode |
+| Multimodal | Text + Higher-resolution Vision |
+| SWE-bench Verified (Adaptive) | 87.6% (May 13, 2026) |
+| Released | April 16, 2026 (GA on API, Bedrock, Vertex, Microsoft Foundry) |
+
+**Best for:** Autonomous coding agents (powers Claude Code), multi-file refactors, complex reasoning. Same pricing as 4.6 - straight upgrade for most workloads.
+**Considerations:** Use Sonnet 4.6 for cost-sensitive workloads; Opus 4.7 mainly for tasks requiring peak coding/agentic quality.
+
+### Claude Mythos Preview (Anthropic) - RESTRICTED ACCESS
+
+| Attribute | Value |
+|-----------|-------|
+| Status | Unreleased - Project Glasswing partners only (~11 orgs: AWS, Apple, Cisco, Google, Microsoft, NVIDIA, Palo Alto, etc.) |
+| Reason for restriction | Dual-use cybersecurity capabilities |
+| SWE-bench Verified | 93.9% (May 13, 2026 - current SOTA) |
+| Released | April 7, 2026 (restricted partner preview) |
+
+**Best for:** N/A in production. Tracked here because it sets the public SOTA on SWE-bench Verified and signals where the frontier sits internally.
 
 ### Claude Opus 4.6 (Anthropic)
 
@@ -114,6 +143,44 @@ This chapter provides a comprehensive guide to the model landscape as of **April
 **Best for:** Competition-level math, complex multi-step reasoning.
 **Considerations:** Very expensive; use standard GPT-5.4 or mini for volume.
 
+### GPT-5.5 (OpenAI) - May 2026 NEW
+
+| Attribute | Value |
+|-----------|-------|
+| Context Window | 1M tokens |
+| Input Cost | $5.00 / 1M tokens |
+| Output Cost | $30.00 / 1M tokens |
+| Multimodal | Text, Image, Audio, Video |
+| ARC-AGI-2 | 85.0% (May 13, 2026 - leader) |
+| Released | April 23, 2026 |
+
+**Best for:** Highest-quality multimodal workloads; current ARC-AGI-2 leader. Pitched as "new class of intelligence for real work" - replaces GPT-5.4 for top-tier reasoning + multimodal.
+**Considerations:** ~2× the input cost of GPT-5.4 ($2.50 → $5.00) and ~2× output ($15 → $30). Use GPT-5.5 Instant for chat workloads where the price isn't justified.
+
+### GPT-5.5 Instant (OpenAI) - May 2026 NEW
+
+| Attribute | Value |
+|-----------|-------|
+| Status | Default in ChatGPT and `chat-latest` in API since May 5, 2026 |
+| Hallucination Reduction | 52.5% fewer on high-stakes prompts (medicine/law/finance) vs GPT-5.3 Instant |
+| AIME 2025 | 81.2% (up from 65.4% on GPT-5.3 Instant) |
+| Response Length | ~30% fewer words/lines than predecessor |
+| Released | May 5, 2026 |
+
+**Best for:** Default ChatGPT-equivalent workloads, instant chat, high-stakes domains where hallucination reduction matters.
+**Considerations:** Replaces GPT-5.3 Instant as the chat default. GPT-5.2-chat-latest and GPT-5.3-chat-latest deprecated May 8, 2026.
+
+### GPT-Realtime-2, Translate, Whisper (OpenAI) - May 2026 NEW
+
+| Attribute | Value |
+|-----------|-------|
+| Capability | Realtime voice with GPT-5-class reasoning |
+| Translate Coverage | 70+ input → 13 output languages |
+| Pricing | $32 / $64 per 1M audio tokens (input/output) |
+| Released | May 7, 2026 |
+
+**Best for:** Real-time voice agents, multilingual translation, voice-first products. Realtime API Beta was removed May 12, 2026 - Realtime-2 is the supported path.
+
 ### Gemini 3.1 Pro (Google)
 
 | Attribute | Value |
@@ -141,6 +208,36 @@ This chapter provides a comprehensive guide to the model landscape as of **April
 
 **Best for:** Real-time multimodal apps, high-volume pipelines, long-context RAG.
 
+### Gemini 3.2 Flash (Google) - May 2026 NEW
+
+| Attribute | Value |
+|-----------|-------|
+| Status | Quiet rollout in iOS Gemini app and Google AI Studio May 5, 2026 (no formal announcement yet) |
+| Released | May 5, 2026 |
+
+**Best for:** Likely successor to 3.1 Flash for high-volume workloads. Treat as preview - pricing and full capability disclosure pending official launch.
+
+### Gemini Deep Research / Deep Research Max (Google) - May 2026 NEW
+
+| Attribute | Value |
+|-----------|-------|
+| Built on | Gemini 3.1 Pro |
+| Capabilities | MCP support; native chart/infographic generation; extended test-time compute; async background workflows |
+| Released | April 21, 2026 |
+
+**Best for:** Research agents, document synthesis, long-running async workflows. The MCP support makes it the first Google research-agent product with first-class tool integration.
+
+### Gemini Robotics-ER 1.6 (Google DeepMind) - May 2026 NEW
+
+| Attribute | Value |
+|-----------|-------|
+| Domain | Physical robotics, embodied reasoning |
+| New capability | Reading gauges/sight glasses |
+| Deployment | Boston Dynamics Spot |
+| Released | April 14, 2026 |
+
+**Best for:** Robotics applications requiring vision-language grounding for physical actions. Available via Gemini API and AI Studio.
+
 ### Grok 4 (xAI)
 
 | Attribute | Value |
@@ -154,10 +251,13 @@ This chapter provides a comprehensive guide to the model landscape as of **April
 **Best for:** Live web research, reasoning-heavy tasks, real-time X/web integration.
 **Considerations:** Grok 4.1 Fast available at $0.20/$0.50 for high-volume.
 
-### Model Comparison: Frontier Tier (April 2026)
+### Model Comparison: Frontier Tier (May 2026)
 
 | Model | Reasoning | Coding | Context | Agentic | Cost |
 |-------|-----------|--------|---------|---------|------|
+| Claude Mythos Preview (restricted) | ★★★★★ | ★★★★★ | ★★★★★ | ★★★★★ | n/a |
+| Claude Opus 4.7 | ★★★★★ | ★★★★★ | ★★★★★ | ★★★★★ | $$$$ |
+| GPT-5.5 | ★★★★★ | ★★★★★ | ★★★★★ | ★★★★★ | $$$$ |
 | Claude Opus 4.6 | ★★★★★ | ★★★★★ | ★★★★★ | ★★★★★ | $$$$ |
 | GPT-5.4 | ★★★★★ | ★★★★★ | ★★★★ | ★★★★★ | $$$ |
 | Claude Sonnet 4.6 | ★★★★★ | ★★★★★ | ★★★★★ | ★★★★★ | $$$ |
@@ -165,6 +265,7 @@ This chapter provides a comprehensive guide to the model landscape as of **April
 | Grok 4 | ★★★★ | ★★★★ | ★★★★ | ★★★★ | $$$ |
 | GPT-5.4-mini | ★★★★ | ★★★★ | ★★★★ | ★★★ | $ |
 | Gemini 3.1 Flash | ★★★ | ★★★ | ★★★★★ | ★★★ | $ |
+| GPT-5.5 Instant | ★★★★ | ★★★★ | ★★★★ | ★★★★ | $$ |
 
 ### Production Heritage & Maturity
 
@@ -192,7 +293,7 @@ While frontier models lead on benchmarks, many enterprise systems rely on **batt
 |-------|------------|---------|--------------|-------|
 | Llama 4 Scout | 17B active / 16 experts (MoE) | 10M | Sparse MoE | Industry-leading 10M context; fits single H100; beats Gemma 3, Gemini 2.0 Flash-Lite |
 | Llama 4 Maverick | 17B active / 128 experts (MoE) | 1M | Sparse MoE | Beats GPT-4o and Gemini 2.0 Flash; comparable to DeepSeek V3 at half active params |
-| Llama 4 Behemoth | ~288B active (est.) | — | Dense MoE | Still training; outperforms GPT-4.5, Gemini 2.0 Pro on STEM benchmarks |
+| Llama 4 Behemoth | ~288B active (est.) | - | Dense MoE | Still training; outperforms GPT-4.5, Gemini 2.0 Pro on STEM benchmarks |
 
 **Strengths:**
 - First Llama generation with Mixture-of-Experts architecture
@@ -211,31 +312,66 @@ While frontier models lead on benchmarks, many enterprise systems rely on **batt
 
 ### DeepSeek Family
 
-| Model | Parameters | Status | Notes |
-|-------|------------|--------|-------|
-| DeepSeek-V3 | 671B (MoE, 37B active) | Frontier | GPT-4o level at a fraction of training cost; open weights |
-| DeepSeek-V3.2 | 671B (MoE) | Frontier | General-purpose, optimized for speed and daily tasks |
-| DeepSeek-R1 | 671B (MoE) | Reasoning | Matches o1 on math/code; first open-source reasoning model |
-| DeepSeek-R1-Distill | 7B–70B | Reasoning | Distilled to smaller models; cost-efficient reasoning |
+| Model | Parameters | Context | Status | Notes |
+|-------|------------|---------|--------|-------|
+| **DeepSeek V4 Pro (preview)** | 1.6T total / 49B active (MoE) | 1M | May 2026 NEW | Previewed April 24, 2026. Uses ~27% compute / 10% memory of V3.2 at 1M tokens. SWE-bench Verified 80.6%. NIST CAISI evaluation (May 2026) places it ~8 months behind US frontier (Elo ~800). Open weights on Hugging Face. |
+| **DeepSeek V4 Flash (preview)** | 284B total / 13B active (MoE) | 1M | May 2026 NEW | Smaller-active variant for high-throughput workloads. |
+| DeepSeek-V3.2 | 671B (MoE) | 128K | Frontier | General-purpose; 98% cache-hit discount, off-peak 50% off ($0.28/$0.42 per 1M base). |
+| DeepSeek-V3 | 671B (MoE, 37B active) | 128K | Frontier | GPT-4o level at a fraction of training cost; open weights. |
+| DeepSeek-R1 | 671B (MoE) | 128K | Reasoning | Matches o1 on math/code; first open-source reasoning model. |
+| DeepSeek-R1-Distill | 7B–70B | - | Reasoning | Distilled to smaller models; cost-efficient reasoning. |
 
-**Key 2026 context**: DeepSeek shocked the industry by demonstrating frontier-level performance at dramatically lower training costs. V3.2 is the latest general-purpose release. DeepSeek R2 (successor to R1) has been delayed, reportedly due to challenges training on Huawei Ascend chips. DeepSeek V4, focused on coding and long-context software engineering, is anticipated in 2026. Open weights available on Hugging Face.
+**Key May 2026 context**: DeepSeek V4 Pro (April 24 preview) is the headline open-weight catch-up - closes the gap with frontier models on multiple benchmarks at dramatically lower self-hosted cost. The 98% cache-hit discount + 50% off-peak pricing make V3.2/V4 the dominant choice for high-volume RAG/classification workloads where prompts are cache-friendly. DeepSeek R2 (reasoning successor to R1) remains delayed per reports about Huawei Ascend training challenges.
 
-### Qwen 2.5 Family (Alibaba)
+### Moonshot Kimi Family - May 2026 NEW
 
-| Model | Parameters | Notes |
-|-------|------------|-------|
-| Qwen2.5-Coder-32B | 32B | Top open coding model; rivals GPT-4o on HumanEval |
-| Qwen2.5-72B | 72B | Best multilingual open model; strong CJK support |
-| Qwen2.5-7B | 7B | Efficient self-hosted option |
+| Model | Parameters | Context | Notes |
+|-------|------------|---------|-------|
+| **Kimi K2.6** | 1T total / 32B active (MoE) | - | Released April 20, 2026. Modified MIT license. Native video input; Agent Swarm scaling to 300 sub-agents and 4,000 coordinated steps. Ties GPT-5.5 on SWE-Bench Pro (58.6%); SWE-bench Verified ~80.2%. |
+| Kimi K2-Thinking-0905 | - | - | First model to hit 100% on AIME 2025 (reasoning variant). |
+
+**Best for:** Long-horizon agent workloads, video understanding, open-weight agent stack alternative to closed frontier.
+
+### Alibaba Qwen 3.x Family - May 2026 NEW
+
+| Model | Parameters | License | Notes |
+|-------|------------|---------|-------|
+| **Qwen 3.6 Max-Preview** | ~1T MoE | Commercial preview | Released ~April 20–27, 2026. 262K context. Tops six coding benchmarks per Alibaba. |
+| **Qwen 3.6-Plus** | - | - | Released April 2, 2026. Enhanced coding. |
+| **Qwen 3.6-35B-A3B** | 35B / 3B active MoE | Apache 2.0 | Released April 16, 2026. Open-weight workhorse. |
+| Qwen2.5-Coder-32B | 32B | Apache 2.0 | Previous-generation open coding leader. |
+| Qwen2.5-72B | 72B | Apache 2.0 | Previous-generation multilingual leader. |
+| Qwen2.5-7B | 7B | Apache 2.0 | Efficient self-hosted option. |
 
 ### Mistral Family
 
-| Model | Parameters | Notes |
-|-------|------------|-------|
-| Mistral Large 3 | 675B (MoE, 41B active) | Sparse MoE; parity with best open-weight models; #2 OSS non-reasoning on LMArena |
-| Mistral Small 4 | — | Hybrid instruct/reasoning/coding; 256K context; released March 2026 |
-| Mistral 3 (14B/8B/3B) | 3B–14B | Unified family: multilingual, multimodal, Apache 2.0 |
-| Mixtral 8x22B | 141B (MoE) | Previous gen; still viable for throughput |
+| Model | Parameters | Context | Notes |
+|-------|------------|---------|-------|
+| **Mistral Medium 3.5** | 128B dense | 256K | May 2026 NEW. Released April 29, 2026. Merges Magistral (reasoning) + Pixtral (vision) + Devstral 2 (coding) into one model. 77.6% on SWE-Bench Verified. $1.50/M input tokens. |
+| **Voxtral TTS** | 4B open-weights | streaming | May 2026 NEW (March 23 release, CC BY-NC 4.0). 70ms latency, 9 languages, 3-second voice cloning. |
+| Mistral Large 3 | 675B (MoE, 41B active) | 256K | Sparse MoE; parity with best open-weight models; #2 OSS non-reasoning on LMArena. |
+| Mistral Small 4 | - | 256K | Hybrid instruct/reasoning/coding; released March 2026. |
+| Mistral 3 (14B/8B/3B) | 3B–14B | - | Unified family: multilingual, multimodal, Apache 2.0. |
+| Mixtral 8x22B | 141B (MoE) | - | Previous gen; still viable for throughput. |
+
+### Google Gemma Family - May 2026 NEW
+
+| Model | Parameters | Context | License | Notes |
+|-------|------------|---------|---------|-------|
+| **Gemma 4 (31B dense)** | 31B | 256K | Apache 2.0 | Released April 2, 2026. 140+ languages; native vision/audio; function calling. |
+| **Gemma 4 (26B-A4B MoE)** | 26B / 4B active | 256K | Apache 2.0 | Sparse MoE variant. |
+| **Gemma 4 E4B** | 8B | 256K | Apache 2.0 | Edge-suitable. |
+| **Gemma 4 E2B** | 5.1B / 2.3B active | 256K | Apache 2.0 | Smallest variant; mobile/embedded. |
+
+### Meta Muse Spark (Closed Weights) - May 2026 STRATEGIC SHIFT
+
+| Attribute | Value |
+|-----------|-------|
+| License | **Closed weights** - first proprietary model from Meta Superintelligence Labs |
+| Capabilities | Multimodal reasoning with Instant / Thinking / Contemplating modes |
+| Released | April 8, 2026 |
+
+**Strategic significance:** Meta's first non-open model since the original Llama era. Signals that frontier-quality work may require a closed-development feedback loop. Llama 4 Behemoth release was simultaneously paused through fall 2026 amid capability concerns. The open-vs-closed equilibrium is now two-tier: frontier closed lags 6–12 months ahead; open weights catch up via distillation, RL, and ecosystem iteration.
 
 ---
 
@@ -368,8 +504,8 @@ Assume 1M requests/day, 1K input + 500 output tokens:
 | Gemini 3.1 Pro | $2,000 | $6,000 | $240,000 |
 | GPT-5.4-mini | $750 | $2,250 | $90,000 |
 | Gemini 3.1 Flash | $100 | $1,500 | $48,000 |
-| Self-hosted Llama 4 Scout* | — | — | ~$15,000 |
-| Self-hosted Llama 3.3 70B* | — | — | ~$50,000 |
+| Self-hosted Llama 4 Scout* | - | - | ~$15,000 |
+| Self-hosted Llama 3.3 70B* | - | - | ~$50,000 |
 
 *Self-hosted Llama 4 Scout fits on a single H100; Llama 3.3 70B assumes 4x H100 GPUs
 
@@ -381,12 +517,12 @@ Assume 1M requests/day, 1K input + 500 output tokens:
 
 | Model | MMLU | HumanEval | SWE-bench Verified | Notes |
 |-------|------|-----------|--------------------|-------|
-| **Claude Opus 4.6** | — | — | — | Top-tier across reasoning and coding; specific scores check latest |
-| **GPT-5.4** | — | — | — | 33% fewer factual errors vs GPT-5.2; strong coding + agentic |
-| **Claude Sonnet 4.6** | — | — | — | Approaches Opus-level on many tasks |
-| **Gemini 3.1 Pro** | — | — | — | State-of-the-art Google reasoning |
-| **Grok 4** | — | — | — | Competitive reasoning; real-time web integration |
-| **Llama 4 Maverick** | — | — | — | Beats GPT-4o, Gemini 2.0 Flash on reported benchmarks |
+| **Claude Opus 4.6** | - | - | - | Top-tier across reasoning and coding; specific scores check latest |
+| **GPT-5.4** | - | - | - | 33% fewer factual errors vs GPT-5.2; strong coding + agentic |
+| **Claude Sonnet 4.6** | - | - | - | Approaches Opus-level on many tasks |
+| **Gemini 3.1 Pro** | - | - | - | State-of-the-art Google reasoning |
+| **Grok 4** | - | - | - | Competitive reasoning; real-time web integration |
+| **Llama 4 Maverick** | - | - | - | Beats GPT-4o, Gemini 2.0 Flash on reported benchmarks |
 | **DeepSeek-R1** | 90.8 | 92.6 | 49.2% | First open-source reasoning model; math/code strong |
 
 *Source: Respective technical reports and LMSYS Chatbot Arena / LMArena, April 2026. Benchmark scores for newest models (Opus 4.6, GPT-5.4, Gemini 3.1) are evolving rapidly -- always verify with current leaderboards.*

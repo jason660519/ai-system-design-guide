@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <a href="#"><img src="https://img.shields.io/badge/Updated-April%202026-blue.svg" alt="Last Updated"></a>
+  <a href="#"><img src="https://img.shields.io/badge/Updated-May%202026-blue.svg" alt="Last Updated"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License"></a>
   <a href="#-contributing"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome"></a>
   <a href="https://github.com/ombharatiya/ai-system-design-guide"><img src="https://img.shields.io/github/stars/ombharatiya/ai-system-design-guide?style=social" alt="Stars"></a>
@@ -34,6 +34,7 @@
 | **Evaluate AI in production** | [AI Evals Guide (Phoenix/Langfuse)](ai_evals_comprehensive_study_guide.md) → [AI Evals Guide (LangWatch/Langfuse)](ai_evals_complete_guide_langwatch_langfuse.md) |
 | **Find the best courses to learn AI** | [Recommended Courses & Learning Paths](COURSES.md) |
 | **Transition from my current role to AI** | [Role Transition Guide](TRANSITION_GUIDE.md) |
+| **Understand the 2026 AI job market** | [Job Market Trends - May 2026](00-interview-prep/06-job-market-trends-2026.md) ⭐ *NEW* |
 
 ---
 
@@ -43,19 +44,19 @@
 
 | This Guide | Printed Books |
 |------------|---------------|
-| April 2026 models (Claude Opus 4.6, GPT-5.4, Gemini 3.1, Llama 4, Grok 4) | Stuck on GPT-4 |
-| MCP 2.0, A2A protocol, OpenClaw, Computer Use, Agentic RAG, ColBERT | Does not exist |
-| Real pricing with verification dates | Already wrong |
-| Staff-level interview Q&A | Generic questions |
+| May 2026 models (Claude Opus 4.7, GPT-5.5, Gemini 3.1 Pro, DeepSeek V4 Pro, Llama 4, Kimi K2.6, Qwen 3.6, Mistral Medium 3.5, Gemma 4) | Stuck on GPT-4 |
+| MCP 2.0, A2A v1.0, OpenClaw, Computer Use, Agentic RAG, ColBERT, latent reasoning, MoE serving | Does not exist |
+| Real pricing with May 2026 verification dates | Already wrong |
+| Staff-level interview Q&A (110 questions through May 2026) + Job Market Trends | Generic questions |
 
 ---
 
 ## 📖 Guide Structure
 
 ```
-├── 00-interview-prep/           # Questions, frameworks, exercises
+├── 00-interview-prep/           # Questions (110), frameworks, exercises, job-market trends (May 2026)
 ├── 01-foundations/              # Transformers, attention, embeddings
-├── 02-model-landscape/          # Claude Opus 4.6, GPT-5.4, Gemini 3.1, Llama 4, Grok 4
+├── 02-model-landscape/          # Claude Opus 4.7, GPT-5.5, Gemini 3.1, DeepSeek V4, Llama 4, Kimi K2.6, Qwen 3.6, Mistral Medium 3.5
 ├── 03-training-and-adaptation/  # Fine-tuning, LoRA, DPO, distillation
 ├── 04-inference-optimization/   # KV cache, PagedAttention, vLLM
 ├── 05-prompting-and-context/    # CoT, Extended Thinking, DSPy, prompt injection
@@ -102,7 +103,7 @@ Real interview problems with complete solutions and diagrams:
 
 ## 🔬 Bonus Deep-Dive Guides
 
-Two companion guides (3,000+ lines each) covering AI evaluation end-to-end — for Engineers, PMs, and QAs:
+Two companion guides (3,000+ lines each) covering AI evaluation end-to-end - for Engineers, PMs, and QAs:
 
 | Guide | Platforms Covered | What's Inside |
 |-------|------------------|---------------|
@@ -169,4 +170,4 @@ MIT License. See [LICENSE](LICENSE).
   <a href="https://linkedin.com/in/ombharatiya"><img src="https://img.shields.io/badge/LinkedIn-Connect-0A66C2?logo=linkedin" alt="LinkedIn"></a>
 </p>
 
-<p align="center"><i>Last updated: April 2026</i></p>
+<p align="center"><i>Last updated: May 2026</i></p>

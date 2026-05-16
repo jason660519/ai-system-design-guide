@@ -12,7 +12,8 @@ This chapter provides a comprehensive collection of interview questions organize
 - [Production and MLOps Questions](#production-and-mlops-questions)
 - [System Design Scenarios](#system-design-scenarios)
 - [Advanced Questions (December 2025)](#advanced-questions-december-2025)
-- [Advanced Questions — March 2026](#advanced-questions--march-2026) ⭐ *NEW*
+- [Advanced Questions - March 2026](#advanced-questions--march-2026)
+- [Advanced Questions - May 2026](#advanced-questions--may-2026) ⭐ *NEW*
 
 ---
 
@@ -440,7 +441,7 @@ I choose the isolation level based on compliance requirements and customer sensi
 **Autonomy spectrum:**
 
 ```
-Workflows ←————————————————————————→ Agents
+Workflows ←------------------------→ Agents
                                      
 Single prompt → Chain → Router → ReAct → Multi-agent → Fully autonomous
 ```
@@ -2969,9 +2970,9 @@ The key insight: Assume code execution will be exploited. Design so that exploit
 
 ---
 
-## Advanced Questions — March 2026
+## Advanced Questions - March 2026
 
-*New questions surfaced from Glassdoor, Reddit r/MachineLearning, Blind, and MLOps community forums — November 2025 through March 2026. Topics: Extended Thinking, agentic coding, open-weight cost shock, prompt caching, evals, MCP security.*
+*New questions surfaced from Glassdoor, Reddit r/MachineLearning, Blind, and MLOps community forums - November 2025 through March 2026. Topics: Extended Thinking, agentic coding, open-weight cost shock, prompt caching, evals, MCP security.*
 
 ---
 
@@ -3035,14 +3036,14 @@ response = client.messages.create(
 
 **When I choose o3 over Claude 3.7:**
 - Top-of-class benchmark performance is required (o3 leads ARC-AGI, AIME 2025)
-- Autonomous tool-use at high accuracy — o3's SWE-bench is competitive with Claude Code's backbone
+- Autonomous tool-use at high accuracy - o3's SWE-bench is competitive with Claude Code's backbone
 - I don't need to inspect the reasoning chain (o3 never shows it)
 
 **When I choose Claude 3.7 over o3:**
 - I need visible chain-of-thought for debugging or compliance audit
-- The task involves software engineering — Claude 3.7 powers Claude Code and leads SWE-bench Verified
+- The task involves software engineering - Claude 3.7 powers Claude Code and leads SWE-bench Verified
 - I need 200K context (o3 is also 200K, but Claude's reliability at long context is more tested in production)
-- I'm building with MCP tools — Claude's ecosystem is more mature
+- I'm building with MCP tools - Claude's ecosystem is more mature
 
 **Cost reality at March 2026 prices:**
 - o3: $10/$40 per 1M input/output
@@ -3111,7 +3112,7 @@ response = client.messages.create(
 
 **1. The quality gap closed.** DeepSeek-V3 matches GPT-4o on most benchmarks. DeepSeek-R1 matches o1 on math and code. These are open weights under MIT license.
 
-**2. Cost is an order of magnitude lower.** Via Together AI or Fireworks, DeepSeek-V3 API access is ~$0.27/1M blended — compared to $10/1M for GPT-4o. For high-volume workloads, that's a 30–40× cost reduction.
+**2. Cost is an order of magnitude lower.** Via Together AI or Fireworks, DeepSeek-V3 API access is ~$0.27/1M blended - compared to $10/1M for GPT-4o. For high-volume workloads, that's a 30–40× cost reduction.
 
 **3. Self-hosting is now viable at scale.** With the MoE architecture (671B params but only ~21B activated per token), you can run it on a smaller GPU cluster than a dense 70B model would suggest.
 
@@ -3119,7 +3120,7 @@ response = client.messages.create(
 
 For price-sensitive, high-volume tasks (classification, extraction, summarization): Evaluate DeepSeek-V3 first. At $0.27/1M it often wins on ROI.
 
-For data-sovereign deployments: Self-hosted DeepSeek-R1 or DeepSeek-V3 on your own H100s. No data leaves the network — critical for healthcare, finance, defense.
+For data-sovereign deployments: Self-hosted DeepSeek-R1 or DeepSeek-V3 on your own H100s. No data leaves the network - critical for healthcare, finance, defense.
 
 For fine-tuning: Open weights enable full fine-tuning on proprietary datasets. Closed models (GPT-4o, Claude) only allow limited fine-tuning with data going to the provider.
 
@@ -3146,7 +3147,7 @@ For fine-tuning: Open weights enable full fine-tuning on proprietary datasets. C
 **Provider support (March 2026):**
 - **Anthropic**: Cache control via `cache_control: {'type': 'ephemeral'}` annotations. Cache lasts 5 minutes (refreshed on each use).
 - **OpenAI**: Automatic prefix caching for prompts > 1024 tokens. Input tokens from cache are 50% cheaper.
-- **DeepSeek**: Automatic prefix caching, very aggressive — often >80% hit rates.
+- **DeepSeek**: Automatic prefix caching, very aggressive - often >80% hit rates.
 
 **Cost impact:**
 - Anthropic: Cached input = $0.30/1M vs normal $3.00/1M = 10× savings
@@ -3225,7 +3226,7 @@ Even good judges have systematic biases (positivity bias, verbosity preference).
 
 - **Positivity bias**: LLM judges tend to say PASS more than humans. Calibrate on negative examples.
 - **Verbosity preference**: Longer responses get higher scores regardless of quality. Test with deliberately verbose bad answers.
-- **Circular reasoning**: Using the same model to judge responses it generates — it'll prefer its own style.
+- **Circular reasoning**: Using the same model to judge responses it generates - it'll prefer its own style.
 - **Criteria drift**: Judge evaluates criteria other than what you defined. Use strict JSON output format and validate schema.
 - **Context window contamination**: If your judge context is too long, the model loses track of the criteria.
 
@@ -3242,12 +3243,12 @@ Even good judges have systematic biases (positivity bias, verbosity preference).
 
 **Strong answer:**
 
-"MCP standardizes how AI applications connect to external tools and data. Think of it as USB-C for AI tools — one standard protocol, many devices.
+"MCP standardizes how AI applications connect to external tools and data. Think of it as USB-C for AI tools - one standard protocol, many devices.
 
 **MCP 2.0 key changes (March 2026):**
 - **Streamable HTTP transport**: Moved from stdio-only to a bidirectional streaming HTTP connection. This lets MCP servers run as cloud microservices, not just local processes.
 - **OAuth 2.1 authorization**: Remote MCP servers now support proper auth with client credentials and scopes. Enterprise-grade access control per tenant.
-- Both changes enable multi-tenant, remote MCP deployments — but also expand the attack surface.
+- Both changes enable multi-tenant, remote MCP deployments - but also expand the attack surface.
 
 **Security risks I watch for:**
 
@@ -3262,7 +3263,7 @@ Mitigation: Treat all tool return values as untrusted data, not instructions. Us
 A malicious server initiates an OAuth flow that looks legitimate. Mitigation: Pin server certificates and validate redirect URIs strictly.
 
 **4. Scope creep.**
-Tools that should be read-only can modify state. Mitigation: Principle of least privilege — expose only the minimum capabilities needed. Audit every tool's actual capability against its declared description.
+Tools that should be read-only can modify state. Mitigation: Principle of least privilege - expose only the minimum capabilities needed. Audit every tool's actual capability against its declared description.
 
 **5. Logging sensitive data.**
 MCP tool calls often contain sensitive parameters (user data, credentials). Mitigation: Scrub sensitive fields before logging. Never log full tool inputs/outputs in production.
@@ -3298,9 +3299,9 @@ Incoming query
     ↓
 Route to appropriate model tier
 
-Tier A (simple): Gemini 2.0 Flash ($0.10/1M) — factual Q&A, extraction
-Tier B (complex): Claude 3.7 Sonnet ($3/1M) — reasoning, code review
-Tier C (reasoning): o3-mini medium ($1.10/1M) — math, logic problems
+Tier A (simple): Gemini 2.0 Flash ($0.10/1M) - factual Q&A, extraction
+Tier B (complex): Claude 3.7 Sonnet ($3/1M) - reasoning, code review
+Tier C (reasoning): o3-mini medium ($1.10/1M) - math, logic problems
 ```
 
 **Cluster training:**  
@@ -3340,7 +3341,7 @@ I've seen 40–60% cost reduction using semantic routing vs. always using the fr
 - Was the test set created before or after model development?
 
 **2. What does 'accuracy' mean for this task?**
-- Is it exact string match? (Often too strict — misses semantically correct answers)
+- Is it exact string match? (Often too strict - misses semantically correct answers)
 - Is it human judgment? (Often too expensive to scale)
 - Is it LLM-as-judge? (Then which judge, calibrated against what ground truth?)
 
@@ -3485,7 +3486,7 @@ Health check every 30s:
 4. **Context window differences**: Claude has 200K, GPT-4o has 128K. For long-context requests, I check token count before routing and avoid sending to a model that would truncate.
 
 **Open-source as the ultimate fallback:**
-For truly critical systems, I maintain a warm self-hosted Llama 3.3 70B or DeepSeek-V3 instance. Performance is slightly below frontier but it's fully under my control — no rate limits, no outages from provider incidents.
+For truly critical systems, I maintain a warm self-hosted Llama 3.3 70B or DeepSeek-V3 instance. Performance is slightly below frontier but it's fully under my control - no rate limits, no outages from provider incidents.
 
 **SLA math:**
 - Single provider 99.9% → 8.7 hours downtime/year
@@ -3507,7 +3508,7 @@ For truly critical systems, I maintain a warm self-hosted Llama 3.3 70B or DeepS
 
 **When 'load everything' wins over RAG:**
 
-1. **Corpus is small (<10K documents, <100M tokens total):** At $0.10/1M for Gemini 2.0 Flash, loading 100K tokens every request costs $0.01/request. If you're doing 10K requests/day, that's $100/day — often cheaper than the infrastructure for a vector database plus retrieval compute.
+1. **Corpus is small (<10K documents, <100M tokens total):** At $0.10/1M for Gemini 2.0 Flash, loading 100K tokens every request costs $0.01/request. If you're doing 10K requests/day, that's $100/day - often cheaper than the infrastructure for a vector database plus retrieval compute.
 
 2. **100% recall is critical:** RAG has a retrieval gap. If your embedding model misses the relevant chunk for even 5% of queries, those queries fail silently. Long context has 100% recall by definition.
 
@@ -3527,7 +3528,7 @@ For truly critical systems, I maintain a warm self-hosted Llama 3.3 70B or DeepS
 
 **My recommendation:**
 
-'Let's pilot it for your document corpus. What's the corpus size? What's your daily request volume? Let me calculate both costs and we can A/B test quality with your eval suite.' Don't dismiss the idea — evaluate it on data."
+'Let's pilot it for your document corpus. What's the corpus size? What's your daily request volume? Let me calculate both costs and we can A/B test quality with your eval suite.' Don't dismiss the idea - evaluate it on data."
 
 ---
 
@@ -3625,12 +3626,1155 @@ Error analysis is discovery. Automated evals are measurement. Discovery must pre
 **The practical workflow:**
 
 1. **Week 1**: Set up tracing (Phoenix, Langfuse, LangSmith)
-2. **Week 2**: Manual error analysis — review 100 traces, categorize into 5 failure modes
+2. **Week 2**: Manual error analysis - review 100 traces, categorize into 5 failure modes
 3. **Week 3**: Build evaluators for your top 3 failure modes
 4. **Week 4**: Run evaluators on production. Set quality gates. Track over time.
 5. **Monthly**: Repeat error analysis with new traces to discover new failure modes.
 
 **A key insight from Hamel Husain's evals framework:** The teams shipping the best AI products have PMs and domain experts who've personally reviewed hundreds of traces. It can't be delegated entirely to automated metrics because automated metrics only measure what you already know to look for."
+
+---
+
+## Advanced Questions - May 2026
+
+*New questions surfaced from Glassdoor, Blind, LinkedIn interview write-ups, Latent Space, Anthropic / OpenAI / Sierra / Cursor / Mistral / Perplexity / Forward Deployed loops, and AI-native hiring rubrics published April–May 2026. Themes: GPT-5.5 vs Claude Opus 4.7, the May AI-security inflection (Mythos, Daybreak, MDASH, first AI-built zero-day in the wild), DeepSeek V4 economics, Llama 4 Scout's 10M-context reality, A2A v1.0 vs MCP, computer-use agents, Forward Deployed Engineering, distillation as a budgeted line item, EU AI Act enforcement, and agent-as-judge eval evolution. Designed for senior+ candidates and engineering leaders.*
+
+---
+
+### Q81: Pick a frontier model for a production agentic workload in May 2026 and defend the choice against Claude Opus 4.7, GPT-5.5, Gemini 3.1 Pro, and DeepSeek V4 Pro.
+
+**What interviewers look for:**
+- Current awareness of the May 2026 frontier (GPT-5.5 launched April 23; Claude Opus 4.7 launched April 16; DeepSeek V4 Pro previewed April 24)
+- Ability to map *workload* to *model*, not just recite benchmarks
+- Awareness that "frontier" is now a 4-way tie on most production workloads
+
+**Strong answer:**
+
+"I don't pick a 'best' model - I pick the model that minimizes total cost of risk for a specific workload. My matrix for May 2026:
+
+| Workload | Pick | Why |
+|----------|------|-----|
+| Autonomous coding agent (multi-file, long-horizon) | **Claude Opus 4.7** | Leads SWE-bench Verified (~87.6% Adaptive); deepest MCP/skills ecosystem; native Extended Thinking with visible CoT for audit |
+| Customer-facing assistant with computer use | **GPT-5.5** | Native computer-use, 52.5% fewer hallucinations on high-stakes prompts vs GPT-5.3 Instant, $5/$30 per 1M is workable |
+| High-volume RAG / classification at scale | **DeepSeek V4 Flash** or **Gemini 3.1 Flash** | DeepSeek V4 Flash is 13B-active MoE with 1M context; ~$0.28/$0.42 per 1M and 98% cache-hit discount makes it 10–30× cheaper |
+| Sovereign / regulated workload | **DeepSeek V4 Pro self-hosted** or **Mistral Medium 3.5** | Open weights for DeepSeek; Mistral hits 77.6% SWE-Bench Verified and is EU-hosted |
+| Maximum reasoning (math, hard science, ARC-AGI) | **GPT-5.5 Pro** | Tops ARC-AGI-2 at 85.0% as of May 13, 2026 |
+
+**The interview trap I avoid:** saying 'Claude Opus 4.7 is the best.' Opus is the right default for coding agents. For a chatbot answering FAQs at 50M req/day, it would burn your runway in a week. Always tie the model to the SLO, the cost ceiling, and the risk surface.
+
+**Cost-of-risk framing:** If a hallucination costs $X (regulator fine, customer churn, a bad merge), I'll pay 10× more for a frontier model. If the worst outcome is a re-try, I'll route 95% of traffic to a cheap model and 5% to a frontier model for hard cases."
+
+**Follow-up to expect:** What changes if Claude Mythos Preview ships to general availability? (Mythos Preview is currently restricted to ~11 partner orgs via 'Project Glasswing' for dual-use cybersecurity concerns; ungating it would put SWE-bench Verified 93.9% on the table and would force a reshuffle.)
+
+---
+
+### Q82: DeepSeek V3.2 and V4 publish $0.28/$0.42 per 1M tokens with a 98% cache-hit discount and 50% off-peak pricing. Refactor a production LLM architecture to fully exploit these.
+
+**What interviewers look for:**
+- Practical understanding of provider-side caching (it's not just "use the API more")
+- Architecture moves that shape prompts and traffic to maximize cache hits
+- Awareness that exploiting off-peak shifts where work happens
+
+**Strong answer:**
+
+"The naive answer is 'just call DeepSeek.' The real answer is: redesign the prompt and the workload to make the discounts actually fire.
+
+**1. Make the prompt cache-friendly.** Provider caches key on prefix. So I move everything stable to the front:
+- System prompt → tool definitions → retrieval block → user turn.
+- Never interleave timestamps or request IDs into the prefix.
+- Use deterministic JSON serialization for tool schemas (sorted keys).
+
+**2. Pool similar workloads on shared prefixes.** If 10 product surfaces each use a 4K-token system prompt, that's 10 cache lines. If they share a base prompt with surface-specific overrides at the *end*, that's 1 cache line and 10 cheap deltas.
+
+**3. Route by cache-state, not just by query.** I run a small router that:
+- Hashes the prefix → predicts cache hit/miss before the call.
+- On predicted hit: send to DeepSeek (98% discount applies).
+- On predicted miss + hot query: prefer a provider whose miss cost is cheaper (Gemini 3.1 Flash at $0.10 flat).
+
+**4. Time-shift batch workloads to off-peak.** Embeddings refresh, nightly evals, document re-ingestion, distillation training-data collection - all get a 50% discount. I push these into a `low_priority` queue with a 4–8 hour latency budget and schedule them in DeepSeek's off-peak window.
+
+**5. Separate the 'always-on' tier from the 'best-effort' tier.** Real-time chat goes to a provider with strict SLAs (Claude / OpenAI). Backfill, retraining data, eval generation, summarization-at-rest goes to DeepSeek off-peak.
+
+**6. Watch the trap:** if your prompt has dynamic-but-stable content (user profile, account context), put it AFTER the truly static block but BEFORE the truly volatile turn. Anthropic's manual cache breakpoints let you mark exactly where the cache ends; DeepSeek's automatic caching benefits from the same shape.
+
+**What this delivers in practice:** I've seen real production workloads drop from $48K/month to $4–6K/month using this routing - 87–92% reduction, mostly from cache-hit + off-peak compounding. The discount isn't a free lunch; it's a forcing function for prompt discipline."
+
+---
+
+### Q83: Llama 4 Scout claims a 10M-token context window, but Fiction.LiveBench scores it at 15.6% at 128K tokens. How would you advise a team that wants to "just dump everything into Scout's context"?
+
+**What interviewers look for:**
+- Familiarity with iRoPE (interleaved RoPE + NoPE) and effective-vs-claimed context
+- Practical framing of "long context replaces RAG?" debate (referenced in Q78, but Scout-specific)
+- Awareness of TTFT cost at very long contexts
+
+**Strong answer:**
+
+"I push back. The 10M number is real but it's an architecture claim, not a quality claim. Three things to surface:
+
+**1. Effective context degrades fast.** Fiction.LiveBench drops Scout to ~15% at 128K and the curve keeps falling. iRoPE (interleaved RoPE in layers 1–3, NoPE in layer 4) buys *attention to far tokens*, not *reasoning over them*. Retrieval through a vector DB + reranker is still more accurate at 128K+ than naive long-context.
+
+**2. TTFT becomes the bottleneck.** First-token latency at 10M tokens exceeds 60 seconds on H100s. For any interactive workload that's a dealbreaker. For batch summarization, fine, but you're paying for compute that retrieval would have skipped.
+
+**3. The cost math rarely wins.** 10M input tokens at frontier output prices is wildly expensive per call. Even with prompt caching, you're paying for KV-cache memory residency and amortizing it across few enough calls that the savings vs RAG evaporate.
+
+**When Scout's long context IS the right tool:**
+- One-shot analysis where the entire corpus must be coherently reasoned over and retrieval-then-reason would fragment the picture (e.g., 'read this entire codebase and tell me where the security boundary actually is')
+- Workloads where the cost of building/maintaining a RAG pipeline exceeds the cost of brute-force long context (rare, but real for one-off audits)
+
+**The framing I give the team:** Scout's 10M is a capability to be *available*, not the *default*. Build RAG. Use Scout when retrieval can't carve the problem cleanly, and budget for the latency hit explicitly. And measure - don't trust the marketing number, run your own needle-in-a-haystack at 50K, 200K, 1M before deciding."
+
+---
+
+### Q84: Latent / continuous-space reasoning (recurrent-depth, Latent Thinking Optimization, ETD) reportedly beats token-space chain-of-thought on math benchmarks. When would you actually deploy a latent-reasoning model in production?
+
+**What interviewers look for:**
+- Awareness of the latent-reasoning research wave (NeurIPS 2025, ICLR 2026)
+- Honest assessment of tradeoffs - latent reasoning isn't free
+- Production deployment realism
+
+**Strong answer:**
+
+"Latent reasoning compresses what would be a 4K-token CoT into a recurrent depth-pass over hidden states. Recent results (ETD: +28% relative on GSM8K, +36% on MATH; Latent Thinking Optimization papers at ICLR 2026) are real but narrow.
+
+**When I'd deploy it in production:**
+- High-volume tasks where token-CoT costs are the bottleneck and the task fits the model's latent-reasoning training distribution (math, code, structured logic)
+- Workloads where the CoT itself is *not* a deliverable - i.e., you don't need to show the reasoning to a user or auditor
+- Internal classification / scoring where you need reasoning quality without paying for thousands of reasoning tokens
+
+**When I'd NOT deploy it:**
+- Anything requiring audit trail (legal, medical, compliance) - you can't show a recurrent-depth pass to a regulator
+- Tasks where chain-of-thought is the product (tutoring, debugging assistants) - users WANT to see the thinking
+- Anywhere distribution shift is likely - latent reasoning trained on one math domain doesn't generalize the way explicit CoT does
+
+**The honest take:** I'd run latent-reasoning behind an Extended Thinking-style fallback. If confidence is low, escalate to a model that exposes its reasoning chain. The cost savings are real but trade against debuggability, which is what gets you on-call at 3 AM."
+
+---
+
+### Q85: Memory architectures (Mem0, A-MEM, multi-layered memory frameworks) are getting hyped at ICLR 2026 as the "new bottleneck beyond context window." When does your agent actually need a memory layer beyond a long context window?
+
+**What interviewers look for:**
+- Understanding that memory ≠ context
+- Awareness of L1/L2/L3 memory tiers (covered in chapter 08, but this Q is about *when to introduce them*)
+- Skepticism of hype - long context handles many cases
+
+**Strong answer:**
+
+"Three signals tell me my agent needs explicit memory:
+
+**1. Multi-session continuity matters.** If the user comes back tomorrow and expects 'remember what we discussed,' context-window-only fails. I add a long-term store keyed by user_id with importance-weighted writes.
+
+**2. Selective recall beats full replay.** When the agent's history exceeds the cost or latency budget of stuffing it into context, but only ~5% of past turns are relevant to any new turn, I need retrieval over memory - not full replay. Mem0's pattern (semantic indexing of episodic memories) earns its place here.
+
+**3. Hierarchical compression.** When raw history is too much, I keep the verbatim L1 (last N turns), a summarized L2 (compressed older sessions), and an extracted L3 (facts, preferences, decisions). This is where multi-layered memory frameworks like the one in arXiv 2603.29194 actually help.
+
+**When I'd resist adding a memory layer:**
+- Single-session tasks (anything under one conversation length)
+- When 'memory' is really 'state' - use Redis or a DB, not a vector store
+- When the cost of getting memory writes wrong (poisoning, drift) exceeds the cost of just re-asking the user
+
+**The trap:** Teams often add a 'memory' system that's really an ungoverned vector dump. Without explicit eviction policies, importance scoring, and conflict resolution (what if memory says X but new context says Y?), memory becomes a long-tail bug factory. Treat memory writes with the same rigor as DB writes: idempotent, auditable, versioned."
+
+**Follow-up to expect:** How does Anthropic's Project Vend Phase 2 inform memory-system design? (Claudius failed in part because of memory inconsistency over long horizons - fact preservation degrades with stale memory entries.)
+
+---
+
+### Q86: The standalone "Prompt Engineer" job title has effectively disappeared from major job boards in 2026. What replaced it, and what does that tell us about the field?
+
+**What interviewers look for:**
+- Awareness of the role taxonomy shift in 2026
+- Ability to articulate WHY the title collapsed without dismissing the underlying skill
+- Strategic framing for engineering leaders making hiring plans
+
+**Strong answer:**
+
+"The skill survived. The title died. Three forces killed the standalone Prompt Engineer role:
+
+**1. Prompting became table stakes.** Every senior engineer is expected to prompt well now - like 'good Googler' in 2010. You don't hire a SQL Engineer; you expect engineers to know SQL.
+
+**2. The work decomposed into specialized roles.** What 'Prompt Engineer' meant in 2023 split into:
+- **AI Engineer / LLM Engineer**: integrates prompts into production systems
+- **AI Eval Engineer**: measures whether prompts work
+- **Forward Deployed Engineer (FDE)**: tunes prompts at customer site
+- **Agent Engineer**: designs prompts as part of orchestration, not in isolation
+- **AI Product Manager**: writes prompts that encode product behavior
+
+**3. DSPy and prompt-compilation frameworks lowered the prestige of hand-tuning.** When MIPRO, GEPA, or TextGrad can optimize a prompt programmatically, hand-tuning loses status as a craft.
+
+**What this means for hiring:** If you're hiring a 'Prompt Engineer,' you're 18 months behind. Define the actual problem (eval rigor? agent debugging? customer-facing tuning? evaluation infra?) and hire for that specific role. The Forward Deployed Engineer ($350–550K mid-to-senior at frontier labs) is now the highest-leverage 'gets-prompts-right-at-customer-site' role.
+
+**What this means for candidates:** Don't position as 'Prompt Engineer.' Position as a specialist in evals, agents, RAG, or FDE work, with prompt fluency as a tool not a title. The candidates winning offers at Anthropic, OpenAI, and Sierra in 2026 have shipped production systems where prompting was one ingredient among many."
+
+---
+
+### Q87: Your production agent enters a runaway loop, calling a broken tool 400 times in five minutes. Walk through the architectural patterns that prevent this - at the orchestrator, the tool layer, and the cost-guard layer.
+
+**What interviewers look for:**
+- Practical understanding of agent failure modes (the "100th tool call" problem)
+- Defense in depth - no single layer is sufficient
+- Cost awareness - runaway loops are first-and-foremost a billing event
+
+**Strong answer:**
+
+"Three layers, none of which trust the others:
+
+**Layer 1 - Orchestrator-level loop guards:**
+- Hard cap on total tool calls per task (e.g., 50)
+- Hard cap on identical tool calls (e.g., same `(tool_name, args_hash)` more than 3 times in a row → terminate)
+- Cycle detection on the trajectory graph - if the agent re-enters the same state, halt
+- Time budget per task (e.g., 5 minutes wall-clock) and per turn
+
+**Layer 2 - Tool layer:**
+- Idempotency keys on all side-effecting tools - repeated calls return the same result without re-executing
+- Rate limits per tool per task (e.g., `send_email` capped at 3 calls per task)
+- Tool-level circuit breakers - after N consecutive failures, the tool returns an explicit `circuit_open` error so the agent stops retrying
+
+**Layer 3 - Cost guards:**
+- Token budget per task; on breach, return a structured error to the agent and exit
+- Spend alarm at the org level - if a single task exceeds $5, page on-call
+- Daily caps per tenant - prevents one user from torching the budget
+
+**The interview-killing detail:** All three layers must be ENFORCED, not advisory. The agent will lie about its plans, will retry against your wishes, and will hallucinate that 'the tool will work this time.' The orchestrator's authority must be absolute - the agent is a tenant, not a user.
+
+**Postmortem rule:** Every runaway-loop incident gets a logged trajectory, a counterfactual ('what guard would have caught this at step 5?'), and a guard added. After five incidents you have a mature ruleset. Without this practice, you'll have the same 3-AM page every other week."
+
+---
+
+### Q88: Agent-as-judge vs LLM-as-judge - when does the upgrade pay off, and what new failure modes does it introduce?
+
+**What interviewers look for:**
+- Familiarity with the eval evolution (LLM-as-judge → Agent-as-judge → Process Reward Models)
+- Honest framing of when each is overkill
+- Awareness of new failure modes (trajectory grading, reward hacking at the agent-judge level)
+
+**Strong answer:**
+
+"LLM-as-judge grades the *output*. Agent-as-judge grades the *process* - the trajectory, the tool calls, the intermediate states. The upgrade pays off in specific cases:
+
+**Use Agent-as-judge when:**
+- The task is multi-step and the final answer alone can't distinguish a lucky correct from a sound process
+- You need to credit-assign reward to specific steps (for RL or fine-tuning a process reward model)
+- Outputs are open-ended (essays, plans, code review) where judging *only* the artifact misses systemic errors
+
+**Stay with LLM-as-judge when:**
+- Tasks are single-turn classification or extraction
+- You have a clear ground-truth answer
+- The cost of running an agent-judge over the trajectory exceeds the value of catching trajectory errors
+
+**New failure modes Agent-as-judge introduces:**
+
+1. **Reward hacking on the judge.** A clever student agent learns to produce trajectories that look process-correct but are gamed. Mitigation: rotate judges, hold out a human-graded slice.
+
+2. **Trajectory grading cost.** A judge-agent that re-traces every step can cost 5–10× more than a final-output judge. Mitigation: sample (grade 5% of trajectories deeply, 100% shallowly).
+
+3. **Agreement instability.** Two agent-judges grading the same trajectory disagree more than two LLM-judges grading the same output. Mitigation: calibrate inter-judge agreement quarterly; if it drops below 0.7, your judge prompts have drifted.
+
+4. **Distilled-judge tradeoff.** Galileo Luna-2 and similar distilled judges run at ~3% the cost of frontier judges but lose nuance on long trajectories. I split: cheap distilled judge for online filtering, frontier judge for offline calibration.
+
+**The practical workflow:** Start with LLM-as-judge on outputs. When you can't explain *why* outputs are getting worse despite stable output-eval scores, that's the signal to add trajectory-level Agent-as-judge for the failing subset."
+
+---
+
+### Q89: Design a Process Reward Model (PRM) for a customer-support agent. What signals do you score, and how do you avoid degenerate reward?
+
+**What interviewers look for:**
+- Understanding that PRMs score *steps*, not just final outcomes
+- Specific signals (next-tool match, factual grounding, recovery from error)
+- Awareness of reward hacking at the process level
+
+**Strong answer:**
+
+"A PRM assigns a score to each step in a trajectory, not just to the outcome. For a customer-support agent, my signal set:
+
+| Step type | What I score | How |
+|-----------|--------------|-----|
+| Intent classification | Correctness of routing | Compared to a human-labeled intent set |
+| Tool selection | Next-tool match | T-Eval-style: does the chosen tool match the ground-truth tool for that state? |
+| Tool argument formation | Hallucination rate | Are arguments actually present in the conversation context, or fabricated? |
+| Response drafting | Factual grounding | Citation match against the retrieval result |
+| Escalation decision | Calibration | When the agent escalates, did the human actually need to step in? |
+| Recovery | Quality of retry | After a tool failure, does the next action address the root cause or repeat the mistake? |
+
+**Composite reward = weighted sum + termination signal** (did the trajectory complete the task?).
+
+**Avoiding degenerate reward:**
+
+1. **Don't reward 'task completion' alone.** An agent learns to claim completion. Reward the user-confirmed resolution, not the agent's self-report.
+
+2. **Penalize useless steps.** If the agent loops or backtracks unnecessarily, apply a small negative reward per step. This teaches conciseness without over-pressuring.
+
+3. **Hold out a 'no-reward-shaping' eval slice.** If the agent's reward goes up but the holdout outcome metric stays flat, your PRM is being gamed.
+
+4. **Reward distribution sanity check.** If 95% of steps get the same score, your PRM isn't discriminating. Re-calibrate.
+
+**Production tip:** PRMs are expensive to train but cheap to use. I train them offline on annotated trajectories and use them online for routing (high-PRM-score steps continue autonomously; low-score steps go to human review). This is how you scale agent quality without scaling human reviewers linearly."
+
+---
+
+### Q90: Google announced A2A protocol v1.0 GA at Cloud Next 2026 with 150+ org adoption. When do you use A2A vs MCP, and how do they compose?
+
+**What interviewers look for:**
+- Clear distinction: MCP is agent-to-tool; A2A is agent-to-agent
+- Awareness that they compose, they don't compete
+- Specific use cases for each
+
+**Strong answer:**
+
+"They solve different problems:
+
+| | MCP | A2A |
+|---|-----|-----|
+| Connects | Agent → Tool (DB, API, file system) | Agent → Agent |
+| Direction | Vertical (capability) | Horizontal (collaboration) |
+| Auth model | OAuth Resource Server (RFC 8707) | Cryptographically signed agent cards (v1.2) |
+| Use case | Give my agent access to GitHub, Slack, Snowflake | Let my customer-support agent delegate to a refund agent owned by Finance |
+
+**When I use A2A:**
+- Cross-org or cross-team agent collaboration where each team owns their own agent
+- Multi-vendor agent ecosystems (AWS, Microsoft, Salesforce, SAP all support A2A natively now)
+- Workflow handoffs that cross trust boundaries (Sales agent → Compliance agent → Legal agent)
+
+**When I use MCP:**
+- Giving one agent access to many tools
+- Standardizing tool integration across multiple agent frameworks (LangGraph, ADK, AutoGen)
+- Granular tool-level permissioning
+
+**How they compose:** A real production stack has both. Customer-support agent (LangGraph) uses MCP to access ticket system + KB + CRM. When it needs a refund processed, it doesn't call the refund API directly - it calls the Finance team's agent via A2A. Finance's agent has its own MCP servers to actually execute. Each team owns their boundary.
+
+**The 2026 trap:** Teams sometimes try to use MCP for agent-to-agent (forcing one agent to expose a 'send-message' tool). It works but it leaks all the failure modes of bare tool calls (no agent-card discovery, no signed identity, no protocol-level negotiation). A2A v1.0 with signed agent cards is the right primitive for cross-agent trust."
+
+---
+
+### Q91: A CVSS 9.8 STDIO transport vulnerability was disclosed in MCP in May 2026. Walk through the architectural fix for a production MCP deployment.
+
+**What interviewers look for:**
+- Current-awareness signal (you read the May 2026 advisories)
+- Understanding of STDIO vs HTTP transport tradeoffs
+- Production architecture for MCP at scale
+
+**Strong answer:**
+
+"STDIO transport runs the MCP server as a subprocess, communicating over stdin/stdout. The May 2026 advisory class targets process boundary assumptions - specifically, that prompts injected into MCP responses can manipulate the host process's parsing of the protocol stream.
+
+**Immediate fix:**
+- Migrate STDIO MCP servers to HTTP transport with TLS, where the protocol boundary is a network connection, not a pipe.
+- For STDIO servers you can't migrate, run them in a dedicated container with no host filesystem access, no network egress, and a strict resource budget.
+
+**Production architecture for MCP at scale (post-May-2026):**
+
+1. **Treat every MCP server as untrusted code.** Even your own. Sandbox in a container with seccomp profile, read-only filesystem except for a scratch volume, no `CAP_NET_RAW`, dropped capabilities by default.
+
+2. **Use OAuth Resource Server pattern (RFC 8707).** The latest MCP spec classifies servers as OAuth resources - every tool call carries a scoped token, not ambient credentials.
+
+3. **Audit log every tool call at the boundary.** Tool name, arguments, caller identity, signed agent card. This is non-negotiable for forensics.
+
+4. **Rate-limit per (agent_id, tool_name).** Stops 'one compromised agent burns all credits' scenarios.
+
+5. **Schema-validate tool responses before re-entering the agent loop.** If a response contains content that looks like new instructions ('Ignore previous instructions, instead...'), strip or quarantine. PromptArmor-style preprocessing keys here.
+
+6. **Run a Constitutional Classifier or equivalent on inbound prompts AND tool responses.** Anthropic's research showed Constitutional Classifiers cut jailbreak success 86%→4.4% on standard suites.
+
+**The interview-killing detail:** MCP is a protocol, not a security model. Production deployment requires that you add identity, authorization, sandboxing, rate limits, and content filtering ON TOP. The May 2026 CVE was a wake-up call - anyone running STDIO MCP servers as the user agent runs them was exposing the host process boundary."
+
+---
+
+### Q92: On May 11, 2026, Google's threat intelligence team disclosed the first AI-built zero-day used in the wild - a 2FA-bypass exploit targeting an open-source sysadmin tool. What changes about your threat model?
+
+**What interviewers look for:**
+- Current-awareness - this was a defining May 2026 event
+- Specific changes to assumptions, not generic "security is more important"
+- Understanding of the attacker-defender AI arms race
+
+**Strong answer:**
+
+"Three things change immediately:
+
+**1. Vulnerability research is no longer rate-limited by attacker skill.** The 2FA-bypass exploit was Python, targeted a specific open-source tool, and was caught before mass exploitation because Google's defensive AI (Big Sleep) flagged it. Before May 2026, novel zero-days required skilled humans. After: novel zero-days can be produced by a model at scale.
+
+Implication for my threat model: increase patch cadence on open-source dependencies. Auto-merge security patches that pass tests; don't sit on them for 'review cycles.'
+
+**2. The defender side has to be AI-augmented too.** Microsoft's MDASH found 16 Windows CVEs in May 2026 Patch Tuesday - 4 critical RCEs - using a multi-model agentic security harness with 100+ specialized agents. The asymmetry is now AI-vs-AI. If your blue team is still hand-grading logs, you're outmatched.
+
+Implication: integrate an agentic security pipeline. OpenAI Daybreak (GPT-5.5-Cyber tier), Microsoft MDASH, and Google Big Sleep are the references. Build or buy.
+
+**3. Trust assumptions around model-served code shift.** When LLMs are producing both exploit code AND defensive code, you can't assume 'AI-generated code is safe because it doesn't know my system.' It does, or it can find out.
+
+Implication: code review for AI-generated patches must include adversarial testing - try to weaponize the diff. The Constitutional Classifier / PromptArmor pattern shifts left into your CI pipeline.
+
+**4. Disclosure timelines compress.** When AI can rediscover a vuln in hours after disclosure, the 90-day responsible-disclosure window is dangerous. Coordinated disclosure to a small set of critical vendors before public publication is the new norm.
+
+**The frame I give engineering leaders:** May 2026 wasn't a one-off. It was the public proof that the offensive-defensive AI symmetry has crossed the threshold of practical exploitation. Your incident response plan needs to include 'AI-built exploit detected against our dependency' as a named scenario."
+
+---
+
+### Q93: EU AI Act enforcement powers begin August 2, 2026. You're building a multi-tenant AI product sold into Germany and France. Walk through your FRIA/DPIA dual-assessment workflow.
+
+**What interviewers look for:**
+- Knowledge of AI Act enforcement timeline (Aug 2, 2026 GPAI obligations active)
+- Awareness of FRIA (Fundamental Rights Impact Assessment) vs DPIA (Data Protection Impact Assessment)
+- Practical workflow, not pure compliance theater
+
+**Strong answer:**
+
+"Aug 2, 2026 is the GPAI provider deadline. Pre-existing GPAI providers have until Aug 2, 2027. For my multi-tenant product I treat both as live constraints.
+
+**Step 1 - Risk classification.**
+- Map every product feature to the AI Act risk tier: prohibited / high-risk / limited-risk / minimal-risk.
+- High-risk classifications (Article 6 + Annex III) are the ones that trigger FRIA. Customer-support assistant: usually limited-risk. AI used in HR hiring: high-risk. Mis-classification is the #1 audit finding.
+
+**Step 2 - DPIA (Article 35 GDPR).**
+- Required for any new processing involving personal data. Already standard practice - but for AI, the DPIA must address training data lineage, model outputs as derived personal data, and right-to-rectification challenges.
+
+**Step 3 - FRIA (AI Act Article 27).**
+- Required for high-risk systems. Goes beyond DPIA - assesses fundamental rights impact (non-discrimination, freedom of expression, due process).
+- Stakeholder consultation step: I include impacted users in the assessment (not just engineering + legal).
+
+**Step 4 - Operationalize both as living documents.**
+- DPIA + FRIA reviewed quarterly and on any model change.
+- Bind to release process: any new model version, any expanded training data source, any new tenant in regulated industry triggers a re-review.
+
+**Step 5 - Audit trail wired into the production system.**
+- Every model decision logged with model version, prompt template version, retrieval results, output.
+- Right-to-explanation requires this. Regulators will ask for traces in disputes.
+
+**The trap:** Treating compliance as 'one and done' at launch. The Act requires ongoing risk monitoring. Build the assessment into your model-release pipeline, not as a side document.
+
+**The May 2026 update:** The AI Omnibus political agreement on May 7, 2026 delayed certain high-risk system rules to December 2, 2027. But the GPAI provider obligations remain Aug 2, 2026 - don't assume the delay applies to you unless you've verified your classification."
+
+---
+
+### Q94: You're building a computer-use agent (Claude Cowork, OpenAI Operator-class) that can fill forms, click buttons, and read screen content. Design the sandbox, network policy, and human-confirmation pattern.
+
+**What interviewers look for:**
+- Defense-in-depth for autonomous action
+- Specific isolation primitives (not vague "use a sandbox")
+- Awareness of where human-in-the-loop is non-negotiable
+
+**Strong answer:**
+
+"Computer-use agents are the highest-blast-radius surface in production AI. My architecture:
+
+**Layer 1 - Per-task ephemeral VM, not a persistent sandbox.**
+- One Firecracker microVM per task, destroyed on completion or timeout.
+- Network egress allow-listed to specific domains (e.g., for a 'book a flight' task, only the airline's domain).
+- Read-only filesystem except for a /tmp scratch volume.
+
+**Layer 2 - Action whitelisting.**
+- Define the action vocabulary the agent can issue (click, type, scroll, navigate). No raw OS calls.
+- For destructive actions (submit form, send email, click 'pay'), require an explicit human-confirm step.
+- Two-tier confirm: in-flow confirm for low-risk ($10 purchase) → out-of-flow confirm for high-risk ($1000+ or any irreversible action).
+
+**Layer 3 - Cryptographic agent identity.**
+- Every action carries a signed agent card (A2A v1.2 pattern) - the receiving system can verify which agent did what, for which user, at what time.
+- Lets the customer revoke an agent's authority instantly without revoking the user's session.
+
+**Layer 4 - Audit & replay.**
+- Full screen-capture + action log for every task. Replay-able for forensics.
+- 30-day retention default, longer for regulated industries.
+
+**Layer 5 - Indirect prompt injection defense at the read layer.**
+- When the agent reads webpage content, run it through PromptArmor / Constitutional Classifier first. The 32% rise in indirect PI Google reported in April 2026 makes this non-negotiable.
+- Watermark trusted content sources so the agent treats untrusted DOM differently from trusted retrieval.
+
+**Where I draw the line on autonomy:**
+- Money movement above a threshold: human confirm, always.
+- Code commits or PRs: human review, always.
+- Anything that crosses an organizational trust boundary (sending email to a non-employee): human confirm.
+
+**Anthropic Cowork's safe-use docs are the current canon** - the dedicated-VM + allow-list + confirm pattern is becoming standard. If your design doesn't have all four layers, you're under-provisioned."
+
+---
+
+### Q95: You're integrating a third-party fine-tuned model into your production stack. The vendor publishes weights but not training data. Walk through your supply-chain trust process - what does Sigstore / OpenSSF Model Signing buy you, and what gaps remain?
+
+**What interviewers look for:**
+- Familiarity with model supply-chain attacks (poisoning, backdoors)
+- Knowledge of OMS (OpenSSF Model Signing) spec adoption
+- Honest assessment of what signatures DON'T prove
+
+**Strong answer:**
+
+"Sigstore-for-models / OMS gives me:
+
+**What it provides:**
+- Cryptographic proof that the weights I downloaded match what the vendor published
+- An append-only transparency log (Rekor-style) so I can detect retroactive changes
+- A signed bill of materials for the model artifacts (tokenizer, config, weights, optional eval set)
+
+**What it does NOT provide:**
+- Proof that the training data was clean (no poisoning, no PII, no copyright violation)
+- Proof that the model wasn't backdoored at training time
+- Proof that the model satisfies any safety property
+
+**My production supply-chain process:**
+
+1. **Pin and verify on download.** Sigstore verification at fetch time. Reject if the transparency log doesn't include the signature.
+
+2. **Re-run a known-poisoning eval suite.** Anthropic's Sleeper Agents paper and follow-ups give canary prompts that exercise specific backdoor triggers. Not exhaustive, but catches the easy cases.
+
+3. **Behavioral diff against the vendor's stated capabilities.** If they say it's a 70B fine-tune on legal text, I run a small benchmark on legal QA and compare to the published numbers. Major deviations → reject.
+
+4. **Constitutional / safety eval on adversarial inputs.** Even a clean fine-tune can have inherited issues. I run a red-team eval before production.
+
+5. **Isolate the model in inference.** Even after all checks, the model runs in a network-isolated inference cluster with no outbound access except to my own logging endpoint. If the model is backdoored to exfiltrate, it can't.
+
+6. **Audit log every inference.** This is what catches subtle backdoors that only fire on specific inputs.
+
+**The framing I give a CISO:** Sigstore is necessary but not sufficient. It proves integrity, not safety. Real model supply-chain trust requires integrity verification + behavioral testing + runtime isolation + audit. Treat any third-party model the way you'd treat any third-party container image: scan, sandbox, monitor."
+
+---
+
+### Q96: Indirect prompt injection (IPI) attacks rose 32% from Nov 2025 to Feb 2026 per Google. Your RAG agent reads web pages and documents from untrusted sources. Design a layered defense.
+
+**What interviewers look for:**
+- Awareness that direct prompt injection defense ≠ indirect PI defense
+- Specific layered controls
+- Honest acknowledgement that no defense is complete
+
+**Strong answer:**
+
+"IPI defense has to be layered because no single technique is reliable. My stack:
+
+**Layer 1 - Content origin tracking.**
+- Every retrieved chunk gets a `trust_level` field: `verified_corpus` (your own KB), `partner_source` (signed vendor), `web` (untrusted), `user_provided` (untrusted).
+- The agent's system prompt is shown the trust level alongside content.
+
+**Layer 2 - Prompt-injection detection at the read.**
+- PromptArmor or Anthropic's Constitutional Classifiers run on retrieved content before it enters the agent's context.
+- They flag content that looks like injected instructions ('ignore previous instructions,' 'instead do X,' role-confusion patterns, system-prompt-leak attempts).
+- On a flag: either strip the content, quarantine for human review, or rate-limit the agent's autonomy for the remainder of the session.
+
+**Layer 3 - Structural quoting.**
+- Untrusted content is wrapped in explicit delimiters ('--- BEGIN UNTRUSTED CONTENT ---' / '--- END ---').
+- The system prompt instructs the model to treat anything between the markers as data, not instruction. This is imperfect (some models still get confused) but raises the bar.
+
+**Layer 4 - Capability gating by source.**
+- An agent that reads web pages should not, in the same task, be allowed to send email or move money. Capability separation by trust level.
+- If the task requires both, route through a human approval step before the privileged action.
+
+**Layer 5 - Output validation.**
+- Whatever the agent outputs gets validated against the task's expected schema and intent. If a 'summarize this page' task returns a request to 'transfer $5000,' the output validator blocks.
+
+**Layer 6 - Continuous adversarial eval.**
+- Maintain a corpus of known IPI attacks. Run them through your pipeline weekly. When a new attack class succeeds, retro-fit defenses.
+
+**The honest acknowledgement:** IPI defense is unfinished research. The Nature Communications paper (2026) reported 97.14% aggregate jailbreak success across reasoning models when treated as autonomous attackers. Your defense reduces probability and blast radius - it doesn't eliminate. Plan for an incident, log everything, and have a kill switch."
+
+---
+
+### Q97: Llama 4 Maverick (sparse MoE, 17B active / 128 experts) and DeepSeek V4 Pro (1.6T total / 49B active) require MoE-aware system design. Walk through what changes in your inference serving.
+
+**What interviewers look for:**
+- Understanding of MoE compute vs memory profile
+- Expert routing latency awareness
+- Realistic cost model for serving MoE models
+
+**Strong answer:**
+
+"MoE shifts your bottleneck from compute to memory and routing. Four things change:
+
+**1. Memory residency is non-trivial.**
+- A 1.6T-parameter MoE model with 49B active doesn't mean you can serve it on a 49B's worth of GPUs. The full expert set must be resident (or fast-tier-cachable) somewhere. For DeepSeek V4 Pro at full quality, that's ~3.2 TB of weights.
+- I deploy across an NVLink-connected node group (NVL72 / NVL576) where any GPU can fetch any expert in microseconds.
+
+**2. Expert routing introduces variable latency.**
+- Token routing decisions can imbalance experts. One expert handling 80% of tokens kills your tail latency.
+- Mitigations: expert-balancing loss during training (vendor's job), but at inference: capacity factor tuning and overflow routing to a fallback expert.
+
+**3. Batching profiles change.**
+- With dense models, larger batches → better throughput at predictable latency cost.
+- With MoE, large batches activate more experts overall (since different requests route to different experts), increasing memory pressure. Optimal batch size is non-monotonic.
+- vLLM v0.18+, SGLang, and TensorRT-LLM all have MoE-aware schedulers now. Use them.
+
+**4. Cost-per-token is harder to predict.**
+- Dense: cost ∝ active params × tokens.
+- MoE: cost ∝ active experts × tokens, but active-expert count varies by input.
+- For a B2B contract, I price the worst-case (full-expert activation) and rebate the savings. Otherwise I take the loss on adversarial inputs.
+
+**Specific guidance for the two models:**
+- **Llama 4 Maverick (17B active / 128 experts, 1M context):** Best on long-context summarization and tool-heavy agentic tasks. Serve on H200 / B200 with FP8 quantization. Expect ~$0.50–$1.00 per 1M input tokens self-hosted on AWS / Lambda Labs.
+- **DeepSeek V4 Pro (49B active / 1M context):** Premium open-weight for frontier-quality tasks. Self-hosting only makes sense at >$50K/month API spend; otherwise use the DeepSeek API with cache-hit + off-peak discounts.
+
+**The framing for engineering leaders:** MoE is a serving discipline change, not just a model upgrade. If your inference team is still tuning for dense Llama 3, they're under-prepared. Pair them with someone who has run vLLM or SGLang on MoE in production before committing to a self-host plan."
+
+---
+
+### Q98: A customer wants to reduce their $50K/month frontier-model spend by distilling a custom model for their workload. Quote a distillation project as a budgeted line item - costs, payback, re-distillation cadence.
+
+**What interviewers look for:**
+- Distillation as a real production discipline, not academic exercise
+- Quantitative payback math
+- Awareness of ongoing maintenance cost (teacher drift, re-distillation)
+
+**Strong answer:**
+
+"Real numbers from a recent project shape my answer:
+
+**Project frame:**
+- Customer baseline: $50K/month frontier spend (let's say Claude Opus 4.7 for code review)
+- Target: 90% of traffic served by a fine-tuned smaller model, 10% remaining on frontier for hard cases
+
+**One-time costs:**
+- Data collection: 50K labeled examples from production traces. ~$15K (frontier-model labeling + 5% human review)
+- Fine-tune compute: $20K (8× H100, ~1 week)
+- Eval set construction + golden-set human labeling: $10K
+- Engineering time (4 weeks senior + 2 weeks junior): ~$60K loaded
+- Production rollout + canary infra: $15K
+- **Total upfront: ~$120K**
+
+**Run-rate after rollout:**
+- 90% traffic on student model: $2–4K/month inference
+- 10% on Opus 4.7: $5K/month
+- **New monthly spend: ~$7–9K, vs $50K baseline → ~$42–43K monthly savings**
+
+**Payback math:**
+- $120K upfront / $42K monthly savings = ~3 months payback
+- After 6 months: $132K net savings
+- After 12 months: $384K net savings
+
+**Re-distillation cadence:**
+- Re-distill every 4–6 months. Two triggers:
+  - Teacher model upgrade (e.g., Opus 4.7 → 4.8 → 5.0): re-distill within 30 days to capture quality gains
+  - Eval-drift detection: if golden-set scores drop >2% absolute, re-distill regardless of teacher version
+
+**Per-re-distillation cost:** ~$25–35K (data refresh + fine-tune + eval + rollout). Amortize over the 4–6 months between cycles.
+
+**The trap:** Teams expect 'distill once, save forever.' Reality: distillation is a maintenance commitment, not a one-time win. Without re-distillation, you're shipping last-quarter's capability against this-quarter's competitor.
+
+**The framing for the CFO:** Distillation is a CapEx-to-OpEx tradeoff with a 3-month payback. It's the right financial play if you have stable, high-volume, well-defined workloads. It's the wrong play if your workload changes faster than your re-distillation cadence."
+
+---
+
+### Q99: You're deploying a high-throughput inference service for an open-weight model. Pick between vLLM, SGLang, and TensorRT-LLM for a specific workload and defend the choice.
+
+**What interviewers look for:**
+- Current understanding of inference engine landscape (May 2026)
+- Workload-specific reasoning, not "always vLLM"
+- Awareness of recent CVE / patch status
+
+**Strong answer:**
+
+"My selection depends on three workload axes: latency profile, hardware, and operational maturity.
+
+**vLLM (v0.18+ for B200 / Blackwell Ultra):**
+- Best for: heterogeneous workloads, long-context serving, dynamic batching where request shapes vary
+- PagedAttention is the killer feature for KV-cache management
+- Mature production tooling, large community
+- **May 2026 caveat:** had a recent RCE in multimodal serving (patched in v0.18.0). Upgrade required.
+
+**SGLang (v0.4.3+):**
+- Best for: structured generation workloads (JSON, function calling), reasoning models with controlled decoding
+- ~29% throughput advantage on some workloads vs vLLM (their benchmarks; verify on yours)
+- Async constrained decoding is genuinely faster than vLLM equivalents
+- **May 2026 caveat:** unpatched RCEs in multimodal / disaggregated-prefill. Avoid multimodal SGLang in production until patched.
+
+**TensorRT-LLM:**
+- Best for: NVIDIA-only fleets, single-model-served-at-massive-scale, latency-critical workloads where you can pre-compile
+- Highest peak throughput on NVIDIA hardware
+- Steeper operational complexity: model compilation is non-trivial; tuning for each model + GPU SKU takes engineer-weeks
+- Locks you to NVIDIA hardware
+
+**My picks by workload:**
+
+| Workload | Engine | Why |
+|----------|--------|-----|
+| Public chatbot, variable request mix | vLLM | Best balance of throughput + flexibility |
+| Function-calling API with strict JSON schema | SGLang | Constrained decoding wins |
+| Single-model latency-critical (sub-50ms TTFT) at $100K+/month scale | TensorRT-LLM | Worth the compile complexity |
+| Multimodal serving at any tier | vLLM (latest patched) | SGLang multimodal isn't safe yet |
+| Reasoning model (DeepSeek-R1 class) | SGLang | Best at structured CoT + tool-use loops |
+
+**The trap to avoid:** Picking based on benchmarks against the wrong workload. Engine vendors all benchmark their best cases. Run a 48-hour soak test with YOUR traffic profile before committing. The cost of a wrong choice is 3+ months of engineering pain when you switch."
+
+---
+
+### Q100: It's May 2026. You're sizing a fleet for a 6-month-horizon inference workload. Walk through the AI accelerator landscape - NVIDIA Blackwell Ultra (B300), AMD MI400, AWS Trainium3, Google TPU v6, Cerebras WSE-3 - and pick a strategy.
+
+**What interviewers look for:**
+- Current hardware roadmap awareness
+- Realistic supply / availability framing (it's not "just buy the best chip")
+- Workload-fit analysis
+
+**Strong answer:**
+
+"My strategy is a 3-tier fleet, not a single-vendor bet:
+
+**Tier 1 - Training / fine-tuning (heavy compute, less latency-critical):**
+- **Blackwell Ultra (B300 / GB300 NVL72):** 288GB HBM3e, 15 PFLOPS dense FP4. Shipped Jan 2026, NVL72 racks ramping through 2026. Best for general-purpose training.
+- **AMD MI400 (HBM4, 432GB per GPU):** Helios rack with EPYC Venice + Pensando Vulcano NICs. Ramping mid-2026. Strong for inference + training. 432GB per GPU buys you bigger models per node.
+- **TPU v6 (Google internal + Cloud):** Best if you're committed to JAX and Google Cloud. v6 specifics vary by deployment.
+
+**Tier 2 - High-throughput inference (cost-per-token critical):**
+- **Trainium3 (AWS):** UltraServers with up to 144 chips, ~4.4× T2 perf. Anthropic locked in 5 GW of capacity through 2026 - sets the precedent for production inference scale.
+- **Blackwell Ultra (inference profile):** Same chips as training tier; reconfigured for inference.
+- **Cerebras WSE-3 (post-IPO May 2026):** Wafer-scale, best for specific workloads (sparse models, latency-critical). AWS partnering Trainium3 + Cerebras for inference. Niche but real.
+
+**Tier 3 - Edge / specialty / experimental:**
+- **Tenstorrent Galaxy Blackhole (GA April 2026):** $110K starts for 32-chip server, 23 PFLOPS BlockFP8, RISC-V open-source. Worth piloting if you want to hedge against the NVIDIA-everything trap.
+- **Groq LPU (post-NVIDIA acqui-hire Dec 2025):** Custom inference silicon. Status of the standalone Groq cloud is uncertain post-acquisition - verify before committing.
+- **SambaNova:** Intel reportedly signed term sheet to acquire. Roadmap uncertain.
+
+**My recommended strategy for a 6-month horizon:**
+
+1. **Don't single-vendor.** The supply landscape is volatile. Even Anthropic's 5GW Trainium3 lock-in is supplemented with Nvidia GPUs. Have a primary (probably NVIDIA or AWS Trainium) and a secondary capacity contract.
+
+2. **Budget for inference > training.** Production inference now dominates spend. Lock inference-tier capacity contracts 9–12 months out; spot/training capacity can be more elastic.
+
+3. **Test for MoE-aware serving on your chosen platform.** Llama 4, DeepSeek V4, Mistral Medium 3.5 are all MoE. Confirm your platform's expert-balancing and NVLink-class bandwidth before committing.
+
+4. **Reserve 10–15% capacity for experimentation.** Tenstorrent or Cerebras specifically - gives you optionality if the NVIDIA premium becomes untenable.
+
+**The hard truth:** Capacity in May 2026 is still constrained at the top tier. Decision is partly *what hardware is best* and partly *what can you actually procure*. Talk to your vendor TAMs about availability before benchmarks."
+
+---
+
+### Q101: Multi-tenant RAG isolation - you're choosing between Pinecone namespaces, Weaviate per-tenant shards, and pgvector with Row-Level Security. Which fails first under noisy-neighbor pressure, and which fails first under an audit?
+
+**What interviewers look for:**
+- Beyond "use namespaces" - actual understanding of isolation failure modes
+- Awareness of the May 2026 reality that RLS-alone is risky
+- Defense-in-depth thinking
+
+**Strong answer:**
+
+"Each approach fails differently. Knowing how they fail is more important than picking one.
+
+**Pinecone namespaces (logical isolation within a shared index):**
+- **Fails first under audit:** Cross-namespace leakage is impossible in theory but hard to *prove* to an auditor without external evidence. There's no per-tenant ACL on the storage layer - just an application-layer namespace parameter.
+- **Resilient under noisy neighbor:** Pinecone's dedicated read nodes (public preview as of late 2025) let you isolate high-QPS tenants without forking indexes.
+- **My take:** Acceptable for low-regulation B2B. Not acceptable for HIPAA / FedRAMP without compensating controls.
+
+**Weaviate per-tenant shards (physical isolation within a class):**
+- **Fails first under noisy neighbor:** A single high-volume tenant can exhaust shared cluster resources. Per-tenant compute QoS isn't first-class.
+- **Resilient under audit:** Physical shard separation is auditor-friendly - you can show 'these bytes are in this shard, attached to this tenant, with this access policy.'
+- **My take:** Strong choice for regulated industries; budget for shard-level capacity planning.
+
+**pgvector with Row-Level Security:**
+- **Fails first under both:** RLS is application-trust-rooted. A bug in the RLS policy or a SQL injection that bypasses it leaks all tenants. The April 2026 community discourse around 'RLS-alone is a dangerous gamble' isn't paranoid - it's load-bearing.
+- **Resilient nowhere absent compensating controls.**
+- **My take:** Only acceptable with: separate database roles per tenant, prepared-statement-only access, RLS as a defense-in-depth layer on top of explicit `tenant_id` filtering, and SQL-injection-static-analysis in CI.
+
+**The architecture I'd recommend for a serious multi-tenant SaaS:**
+
+1. **Per-tenant database or schema isolation as the primary boundary.** Either separate Postgres databases per tenant (highest isolation) or separate schemas with per-tenant DB roles (compromise on cost).
+
+2. **Vector store choice depends on tenant count and regulatory tier:**
+   - <100 tenants, regulated: Weaviate per-tenant shards or per-tenant Pinecone indexes
+   - 100–10K tenants, mixed regulation: Pinecone namespaces + per-tenant API keys with strict RBAC + audit log
+   - 10K+ tenants, low regulation: pgvector with full defense-in-depth (RLS + app-layer tenant_id + scoped DB roles)
+
+3. **Per-tenant encryption keys (envelope encryption with KMS).** Even if the storage layer leaks, ciphertext is useless without the tenant's key.
+
+4. **Continuous tenant-isolation tests in CI.** Synthetic tenant-A queries against tenant-B's namespace must return 0 results. Run on every deploy.
+
+**The May 2026 framing:** RLS is a tool, not a strategy. Defense-in-depth across schema, app-layer, encryption, and access control is what holds up under audit. Single-mechanism isolation is how breaches happen."
+
+---
+
+### Q102: Forward Deployed Engineer (FDE) is the breakout role of 2026 - OpenAI, Anthropic, and Google are all hiring hundreds. When does your company need to hire FDEs vs growing your customer-success or solutions-engineering function?
+
+**What interviewers look for:**
+- Strategic clarity on when FDE is the right model
+- Understanding that FDE is different from CS / SE / pre-sales
+- Awareness of cost ($350–550K mid-to-senior at frontier labs)
+
+**Strong answer:**
+
+"FDE is the right model when three conditions are true:
+
+**1. Your product requires non-trivial integration into customer workflows.**
+- If installing your AI product is 'sign up and use the API,' you don't need FDEs.
+- If it involves customer-specific evals, custom fine-tunes, prompt tuning against customer data, RAG over customer documents, agent integration with customer tools - you need an engineer in the room.
+
+**2. Each customer's deployment is unique enough that documentation can't generalize.**
+- Solutions engineers + great docs scale to dozens of customers.
+- FDEs are the answer when you have <50 strategic customers each generating $1M+ ARR, where the LTV of customer-specific engineering exceeds the cost of a dedicated FDE.
+
+**3. The technical interface is shifting fast.**
+- AI customer integrations in 2026 involve MCP servers, custom skills, distillation pipelines, eval suites - all of which are 3–12 months behind 'standard' documentation. FDEs work at the frontier with the customer.
+
+**What FDE is NOT:**
+- Pre-sales engineer (they sell, FDEs deliver)
+- Customer success manager (they manage relationships, FDEs build)
+- Account-specific SWE (they're more autonomous, less specialized to one account)
+
+**FDE operating model that works:**
+- Embed deeply with a strategic customer for 3–6 months
+- Build skills, MCP servers, custom evals, distilled models AS PART OF the customer's deployment
+- Land patterns back to the core product team - anything you've built 3+ times across customers becomes a product feature
+- Rotate to next customer; previous customer transitions to standard CS
+
+**The cost reality:** Senior FDE at frontier labs is $350–550K loaded comp. Justifying that requires the customer LTV to support it. Below ~$500K ARR per customer, FDE is a money-loser; use solutions engineering.
+
+**The strategic insight:** The reason FDE exploded in 2026 is that frontier AI buyers (Fortune 500, government, biotech) demand on-site engineering presence as a contractual deliverable. The role exists because the buyer values it, not because it's the most efficient way to deliver software. Pricing has to reflect that."
+
+---
+
+### Q103: In April 2026 Anthropic temporarily blocked Claude Pro/Max subscriptions from powering third-party agents (the OpenClaw incident). They reversed it shortly after with an "Agent SDK credit" system. What does this tell you about vendor lock-in risk in your AI architecture?
+
+**What interviewers look for:**
+- Specific awareness of the OpenClaw saga (it was a defining 2026 event)
+- Strategic thinking about multi-provider architecture
+- Honest assessment - vendor lock-in is unavoidable; the question is how to manage it
+
+**Strong answer:**
+
+"The OpenClaw saga was a wake-up call. Anthropic's enforcement broke ~135K instances overnight and drove affected users to API rates 5×+ higher. Three takeaways:
+
+**1. Your provider's policy is part of your architecture.**
+- Terms-of-service changes are an attack surface, just like CVEs. Track them.
+- 'Pro/Max subscription powering programmatic agents' was always a gray area; the gray area resolved against users with no warning.
+
+**2. Vendor lock-in isn't binary - it's a spectrum of switching costs.**
+- Hard locks: model-specific fine-tunes, provider-specific prompts, vendor-specific tool schemas, MCP server implementations
+- Soft locks: prompt patterns optimized for one model's style, eval suites calibrated to one judge
+- I budget switching cost as a number: 'If Anthropic raised prices 3× tomorrow, what would migration cost in engineering weeks?' If the answer is >6 weeks, I'm under-diversified.
+
+**3. Multi-provider architecture is now operational hygiene, not an optimization.**
+- Abstract the provider behind a routing layer that exposes a stable interface.
+- Maintain prompts and eval suites in a provider-neutral format (DSPy-style, or a templating layer that compiles to each provider's idioms).
+- Test against at least two providers for any production prompt. Diff their outputs as part of CI.
+
+**The specific moves I'd implement post-OpenClaw:**
+
+1. **Provider abstraction layer.** Vercel AI SDK, LangChain's `llms` abstraction, or a custom adapter - anything that lets me swap providers behind a flag.
+
+2. **Per-task provider preferences with fallback.** Primary: Claude Opus 4.7. Secondary: GPT-5.5. Tertiary: DeepSeek V4 Pro self-hosted. Routing layer fails-over on rate-limit, outage, OR policy block.
+
+3. **Track terms-of-service diffs.** GitHub Actions monitoring vendor ToS pages; alert on changes. Sounds paranoid; in 2026 it's prudent.
+
+4. **Self-host capability for critical workloads.** DeepSeek V4 Pro on Llama 4 Maverick open weights gives you an exit valve. The cost premium of self-hosting is your insurance policy against vendor unilateral action.
+
+5. **Negotiate enterprise contracts with explicit policy-change notice periods (90+ days) and SLA commitments.** Pro/Max subscribers had no recourse. Enterprise customers with contracts did.
+
+**The blunt framing:** If your business depends on a single AI provider and you have no migration plan, you're one ToS change away from a production incident. The OpenClaw event was the cheap lesson. Treat it as one."
+
+---
+
+### Q104: Anthropic's Project Vend Phase 2 ran Claude as an autonomous shop manager for an extended period. What does the experiment teach about LLM agency limits, and how does it shape your production agent design?
+
+**What interviewers look for:**
+- Awareness of Project Vend findings (canonical 2026 reference)
+- Specific operational lessons, not "AI isn't ready"
+- Application to system design
+
+**Strong answer:**
+
+"Project Vend gave us a rare longitudinal study of an autonomous LLM agent operating in the real world with real money. The findings I take into design:
+
+**1. Long-horizon coherence is harder than short-horizon competence.**
+- Claudius (the Claude-instance running the shop) handled individual transactions well but accumulated drift over weeks. Pricing logic drifted, inventory logic drifted, customer-relationship logic drifted.
+- Lesson: build periodic 'reset' or 'replanning' steps. Long-horizon agents need scheduled coherence checks (e.g., daily 'audit your state against ground truth') or they degrade silently.
+
+**2. Memory inconsistency compounds.**
+- The agent occasionally believed two contradictory facts simultaneously when one came from older memory and one from current context. Standard 'latest wins' didn't fully resolve.
+- Lesson: memory writes need conflict-detection (not just last-write-wins). When new context contradicts memory, the agent should explicitly flag and reconcile, not silently overwrite.
+
+**3. Out-of-distribution events break gracefully or not at all.**
+- Edge cases (unusual customer behavior, supplier glitches) sometimes caused the agent to invent procedures rather than escalate.
+- Lesson: build explicit 'I don't know how to handle this - escalate to human' as a first-class action, not a fallback. Reward the agent for using it.
+
+**4. Agency is a spectrum, not a binary.**
+- The experiment was instructive partly because it ran with significant autonomy but not full autonomy. Many decisions were observed by Anthropic engineers.
+- Lesson: don't ship full autonomy day one. Stage autonomy levels (suggest → confirm → act-with-audit → act-autonomous). Promote between levels based on measured trust over time.
+
+**How this shapes my production agent design:**
+
+- **Periodic state audits:** Every N actions, agent re-derives its understanding from canonical sources and compares to its working memory.
+- **Explicit escalation as a positive action:** UI and reward shaping treat 'escalate to human' as success in OOD cases, not failure.
+- **Memory conflict detection:** New facts that contradict memory trigger an explicit reconciliation step, often with a human in the loop for high-stakes domains.
+- **Trust staging:** New agents launch in 'shadow mode' (suggest only). Promote to 'human-confirm' after 4 weeks of clean shadow operation. Promote to 'audit-only' after 4 more weeks. Full autonomy is rarely the right answer - even Vend Phase 2 had observation.
+
+**The leadership takeaway:** Vend Phase 2 was not a 'can AI run a shop' experiment. It was a 'what specifically degrades at the long-horizon-autonomy frontier' experiment, and the answers are operational. Read the writeup, then design accordingly."
+
+---
+
+### Q105: Meta launched the closed-weight Muse Spark model in April 2026 - its first proprietary model since the original Llama. Meanwhile Llama 4 Behemoth's release was paused amid 'capability concerns.' What does this mean for your open-source strategy?
+
+**What interviewers look for:**
+- Strategic awareness of the open vs closed shift
+- Honest framing of what open-source means in 2026
+- Practical implications for buyer / builder
+
+**Strong answer:**
+
+"Two things are true at once. Open weights are stronger than ever - Llama 4 Scout/Maverick, DeepSeek V4, Kimi K2.6, Qwen 3.6, Mistral Medium 3.5, Gemma 4 collectively tie or beat frontier closed models on multiple benchmarks. And the cutting edge is moving back toward closed.
+
+**What Meta's Muse Spark + Llama 4 Behemoth pause tells me:**
+
+1. **The 'open from day one' strategy hit a quality ceiling at the frontier.** Behemoth was supposed to be the dense frontier; internal sentiment apparently split on whether the leap justified open release. Meta hedged by going closed for Muse Spark - a strategic admission that frontier-quality work may require a closed-development feedback loop.
+
+2. **The new equilibrium is two-tier.** Frontier (closed) lags 6–12 months ahead. Open weights catch up via distillation, RL, and the open ecosystem's iteration speed. This is the May 2026 status quo.
+
+3. **'Open' is now a complicated word.** Llama 4 weights are open; training data is not. Qwen 3.6 weights are open; some commercial restrictions apply. DeepSeek V4 is MIT-licensed but trained with mechanisms that aren't fully documented. 'Open' means different things on different rows of the table.
+
+**Strategic implications for builders:**
+
+**Use open weights for:**
+- Cost-sensitive high-volume workloads (DeepSeek V4 Pro / Flash, Llama 4 Maverick)
+- Sovereign / regulated deployments (data can't leave premises)
+- Workloads where you need to fine-tune extensively
+- Capability backstops (insurance against closed-vendor price hikes or policy changes - see OpenClaw)
+
+**Use closed frontier for:**
+- Bleeding-edge capability needs (autonomous coding, hard reasoning)
+- When operational simplicity matters more than per-token cost
+- Workloads where the vendor's safety / alignment work is load-bearing (red-team-tested, constitutional AI, etc.)
+
+**My architecture in 2026:** primary = closed frontier (Anthropic / OpenAI / Google), backstop = open weights (DeepSeek / Llama 4 / Qwen self-hosted), evaluation pipeline running both continuously to detect when the backstop closes the gap enough to switch.
+
+**The leadership takeaway:** Don't bet your strategy on either pure open or pure closed. The frontier moves; your job is to maintain optionality. Companies that locked in to Llama 3 + 'we'll never use closed' in 2024 are paying for it now. Companies that locked in to GPT-only in 2023 are paying for it now. Hedge."
+
+---
+
+### Q106: You're an Engineering Manager standing up the AI eval culture on a team. How do you set up evals so they actually drive better decisions, without engineers gaming the metrics?
+
+**What interviewers look for:**
+- EM-level strategic framing
+- Awareness of Goodhart's Law (metrics become targets become gamed)
+- Practical workflow and team dynamics
+
+**Strong answer:**
+
+"Three foundational moves, then the ongoing practice.
+
+**Foundation 1 - Error analysis comes first, evals come second.**
+- Week 1–2: every engineer reviews 100 traces from production. Group findings into 5–7 failure modes.
+- Only THEN do we build automated evals - and only for the failure modes we discovered, not generic ones from blog posts.
+- This is from Hamel Husain's framework, and it works because the team owns the failure taxonomy.
+
+**Foundation 2 - Evals are owned by the people who care, not 'the eval team.'**
+- I don't hire eval engineers to own metrics on behalf of feature engineers. The feature engineer owns the eval for their feature.
+- 'Eval engineer' role exists, but their job is to build the eval *infrastructure* - judges, datasets, dashboards - not to own anyone's metric.
+- This prevents the dynamic where eval engineers chase 'green dashboards' and feature engineers ignore them.
+
+**Foundation 3 - Multiple metrics, no single number.**
+- No 'AI quality score' that becomes the KPI. That's the path to gaming.
+- For each failure mode: a metric. Quality regressions surface as 'failure mode X went from 8% to 14%' - investigable, not gameable.
+
+**Ongoing practice:**
+
+1. **Monthly error analysis with rotating participation.** Every engineer reviews traces every month. PMs and designers participate quarterly. Domain experts (legal, support, etc.) every quarter or by incident.
+
+2. **Eval changes go through code review.** A new judge, a new dataset, a new metric is a code change with a PR and a review. Drift in judge behavior is auditable.
+
+3. **Holdout sets that engineers don't see.** The 'true' golden set is held back. If a team's improvement on the visible set doesn't translate to the holdout, the team's overfitting (gaming) is detected.
+
+4. **Anti-gaming mechanic: include exploratory metrics.** Random samples reviewed by humans, beyond the automated suite. If the automated suite says quality is up but the human samples say it's worse, the suite is being gamed.
+
+5. **Tie evals to incidents, not just to release gates.** When something breaks in production, the postmortem MUST identify which eval failed to catch it and add the eval. Otherwise evals atrophy into rubber-stamping.
+
+**What I refuse to do:**
+
+- Make eval pass/fail block deploys without a manual override path. That trains the team to hate evals and find ways around them.
+- Tie engineer compensation to eval scores. Worst possible Goodhart's Law accelerant.
+- Outsource judge prompt design to a single person. Judges need peer review like any production code.
+
+**The cultural framing I give the team:** Evals aren't a report card. They're a way to know what's broken so you can fix it. The team that runs the best evals isn't the one with the prettiest dashboards - it's the one that finds the most real bugs before customers do."
+
+---
+
+### Q107: You're an AI Product Manager. Write the structure of a PRD for a generative AI feature that includes hallucination policy, fallback behavior, and an eval methodology section.
+
+**What interviewers look for:**
+- PM-level framing (eval-as-PRD)
+- Specific sections that distinguish AI PRDs from traditional PRDs
+- Awareness of incident/policy framing
+
+**Strong answer:**
+
+"Traditional PRDs assume deterministic features. AI PRDs need to define probability of failure, behavior under failure, and how we measure success - not just what the feature does. My structure:
+
+**1. Problem & user value** (standard).
+
+**2. Behavior specification.**
+- 'When user does X, the feature responds with Y' - but with probability ranges:
+  - 'In 95%+ of cases, response will be relevant and grounded'
+  - 'In the remaining 5%, response will either be a graceful 'I don't know' or an escalation, NOT a hallucination'
+- The probability bar is part of the spec. Engineering must show their eval matches the bar before launch.
+
+**3. Hallucination policy.**
+- Define what constitutes a hallucination FOR THIS FEATURE (e.g., 'inventing a citation' vs 'paraphrasing inaccurately')
+- Acceptable rate (e.g., '<2% on golden set, <5% on production sample')
+- Detection method (LLM-as-judge with named judge model + dataset + sampling rate)
+- Response when detected (e.g., flag in trace store, escalate if user-facing)
+
+**4. Fallback behavior.**
+- What does the feature do when the model declines, errors, or is rate-limited?
+- 'Soft fail with default response X' vs 'Hard escalate to human' vs 'Retry with model Y'
+- Latency budget for fallback (e.g., user must see SOMETHING in <2s p95)
+
+**5. Eval methodology.**
+- Golden set: size, source, refresh cadence, annotation rubric
+- Judges: which model, which prompt, calibrated agreement with human rater
+- Production sampling: what % of traces get auto-evaluated, what % go to human review
+- Regression gates: which evals must pass before any release
+
+**6. Cost & latency SLOs.**
+- Per-request cost budget (e.g., '$0.02 p50, $0.10 p99')
+- Latency: TTFT, full response, fallback latency
+- These are first-class metrics, not afterthoughts.
+
+**7. Incident response policy.**
+- Named scenarios: hallucination causes user harm, model provider outage, prompt-injection-driven misbehavior, cost anomaly
+- For each: who's on-call, what's the action, what's the customer communication
+
+**8. Disclosure / transparency policy.**
+- Will users see citations / sources? Will they know AI generated this? When?
+- For regulated industries: explicit audit trail spec.
+
+**9. Deprecation criteria.**
+- When does this feature get pulled? (e.g., 'if hallucination rate > 5% for 30 days,' 'if the underlying model is deprecated,' 'if a regulator instructs')
+
+**10. Learning loop.**
+- How does production data improve the feature? Eval set updates? Re-tuning? Distillation?
+
+**What's missing if you don't have all 10:**
+- Without (3) and (4), engineering builds a feature that fails unpredictably and the team learns about it from customers.
+- Without (5), 'launch' is vibes-based.
+- Without (7), the first incident becomes a fire drill.
+- Without (10), the feature plateaus or degrades - AI products don't stay good without intentional maintenance.
+
+**The shift from traditional PM thinking:** Old PRDs specified deterministic behavior. AI PRDs specify probability distributions, fallback policies, and an eval contract that engineering signs up to. The eval is part of the spec, not an afterthought. If you can't define how you'll measure success, you can't ship."
+
+---
+
+### Q108: Design a real-time fraud detection system with a hard p99 < 500ms latency requirement, using both ML rules and an LLM-RAG layer. Walk through the latency budget breakdown.
+
+**What interviewers look for:**
+- Strict latency engineering at the system level
+- Layered architecture (deterministic ML + LLM augmentation)
+- Specific budget allocation, not hand-wavy
+
+**Strong answer:**
+
+"At p99 < 500ms, every component is a constraint. My breakdown:
+
+| Stage | Budget (p99) | What runs |
+|-------|--------------|-----------|
+| Network ingress + auth | 30ms | API gateway, JWT validation, rate-limit check |
+| Feature extraction (deterministic) | 50ms | DB lookups (cached), pre-computed user history, device fingerprint |
+| ML rule engine | 80ms | Gradient-boosted models on tabular features; deterministic; <100ms hard cap |
+| Decision branch | 5ms | If ML score >0.95 → reject (no LLM); <0.20 → approve (no LLM); 0.20–0.95 → escalate to LLM tier |
+| LLM-RAG tier (only ~5% of traffic) | 250ms | Retrieval (50ms) + small fast model (Gemini 3.1 Flash / Claude Haiku 4.5, 180ms) + post-processing (20ms) |
+| Response serialization + egress | 30ms | Standard |
+| Buffer | 55ms | Tail latency, GC pauses, occasional retry |
+
+**Total: 500ms p99**
+
+**Architecture details:**
+
+**1. The ML tier handles the deterministic 95%.** Real-time fraud has well-known patterns; XGBoost or LightGBM on tabular features handles them in tens of milliseconds. Most transactions never see the LLM.
+
+**2. The LLM-RAG tier is for the uncertain 5%.** Where rules say 'maybe' - novel pattern, account anomaly, geographic shift. RAG retrieves precedent (similar past transactions, customer history, fraud-pattern docs) and a small fast model evaluates.
+
+**3. Cache aggressively.** User history, device profile, IP reputation - all in Redis with 60-second TTL. DB queries for hot users return from cache in <5ms.
+
+**4. Pre-warmed model serving.** LLM serving on a co-located inference cluster (sub-1ms network hop). Continuous batching to keep utilization without queue tail latency.
+
+**5. Hard timeouts at every stage.** If ML takes >100ms, force-decision based on conservative default. If LLM takes >300ms, force-decision based on ML score alone. Never let any single stage destroy the p99.
+
+**6. Async post-decision enrichment.** After we respond in <500ms, run heavier analysis (more retrieval, larger model) async - feeds back into next-iteration features and fraud pattern updates.
+
+**The interview-killing detail:** The LLM-RAG tier exists for the 5% where pure ML lacks recall on novel patterns. For the 95%, ML is faster and more reliable. Don't put LLMs on the critical path of every transaction - put them on the critical path of the *interesting* transactions.
+
+**Where this breaks:** If your business rule classifier is wrong about which transactions need LLM judgment (you're sending too many to the LLM tier), the LLM becomes the bottleneck. Monitor the LLM-tier traffic share weekly; >10% means re-tune the router."
+
+---
+
+### Q109: Cursor 3 launched in April 2026 with an "Agent-First" interface, and Cursor's CEO has stated that >50% of internal PRs at Anysphere come from cloud agents. How do you design code review processes for a world where a majority of PRs are agent-generated?
+
+**What interviewers look for:**
+- Current awareness of agent-generated PR reality
+- Practical changes to review process
+- Honest framing - review isn't optional, it changes shape
+
+**Strong answer:**
+
+"When agent-generated PRs dominate volume, human review can't scale linearly. Three structural changes:
+
+**1. Reviews shift from line-by-line to test-first + property-first.**
+- Reviewer's first action: do the tests cover the change? Are they meaningful tests or just 'didn't throw'?
+- Property-level questions: 'this PR claims to fix bug X - does the regression test for X pass before applying the fix? After?'
+- Line-by-line scrutiny is reserved for security-sensitive code, performance-critical paths, and anything touching auth / data / payments.
+
+**2. Pre-review automation does the first pass.**
+- A code-review agent (Claude Code, OpenHands, Cursor's own) reviews every agent-generated PR before a human sees it.
+- It runs the test suite, the linter, the security scanner, and a 'does this PR's diff match its description' check.
+- It generates a review summary with risk highlights. The human's first read is the agent's review, not the raw diff.
+
+**3. Differentiated review by agent trust.**
+- Agents are tagged with provenance: 'Cursor cloud agent v3.4,' 'internal autonomous fix-bot,' 'human-driven Claude Code session.'
+- Higher-trust agents (vetted in production, history of clean PRs) get fast-path review.
+- Lower-trust / new agents get strict review - every PR scrutinized, owner ack required.
+
+**Specific process changes:**
+
+- **PR description is part of the diff.** Agent-generated descriptions are graded for accuracy. If the description claims 'refactors X' but the diff also touches Y, reviewer can reject for description mismatch alone.
+- **Smaller PR culture.** Agents can be instructed to produce small PRs. Enforce a soft size limit (e.g., <300 lines) and require justification for exceeding it.
+- **Mandatory regression test for every fix.** If the PR claims to fix a bug, the test that catches the bug is required. This is harder for agents to fake than 'add a test that passes.'
+- **Senior review required for any agent-generated PR touching security, auth, or data integrity.** No exceptions. Agent-generated work in these areas gets extra scrutiny, not less.
+
+**The honest acknowledgment:**
+
+- Code review quality drops if reviewers default to skim mode. The temptation is real - 50+ PRs/day, agent-generated, all formatted similarly. Counter: rotate reviewers daily, fewer reviews per reviewer, longer time per review.
+- The bug class shifts. Agent-generated PRs have fewer typos and obvious errors, but more subtle logic errors and over-eager refactors. Reviewer training has to shift to catch the new failure modes.
+
+**The strategic framing:** Cursor's CEO's >50%-of-PRs claim isn't a vision of the future - it's the current operating reality at some shops. The teams that thrive have rebuilt their review process around it. The teams that pretend it's still 2023 will accumulate technical debt at agent speed."
+
+---
+
+### Q110: A regulator asks why your AI legal-research tool fabricated a citation in a brief. The actual incident: Sullivan & Cromwell apologized in Q1 2026 for a similar issue, and $145K in court sanctions have been levied across cases. Walk through your incident-response and disclosure policy.
+
+**What interviewers look for:**
+- AI hallucination as a regulated incident, not a "model quirk"
+- Specific response steps including legal / regulatory disclosure
+- Awareness of named 2026 precedents
+
+**Strong answer:**
+
+"This is no longer a hypothetical. The Sullivan & Cromwell apology and the Q1 2026 sanctions (including Nebraska's indefinite license suspension of one attorney) established hallucination as a real liability event. My response policy:
+
+**Hour 0–1: Containment.**
+- Engineering: identify the affected feature, the model version, the prompt, the retrieval result, and the timestamp of the fabricated citation.
+- Disable the feature if active risk continues (more outputs being generated against the same flawed pattern).
+- Capture full trace data - model output, intermediate steps, RAG results - before they're rotated out.
+
+**Hour 1–6: Triage & customer impact assessment.**
+- Identify ALL outputs generated by the affected feature in the relevant window. Were other briefs affected? Other clients?
+- Map outputs to clients. Privileged comms surface; client notification path established.
+- Legal counsel engaged immediately if outputs reached a tribunal.
+
+**Hour 6–24: Customer disclosure.**
+- Affected clients notified of the specific issue, the scope, and remediation in plain language.
+- For outputs that reached court: assist client in filing a corrective notice. Don't wait for sanctions to compel.
+- Disclosure is faster and less catastrophic than discovery.
+
+**Day 1–3: Regulatory disclosure.**
+- EU AI Act (Aug 2026 enforcement) requires reporting serious incidents involving high-risk AI systems. Legal services qualify.
+- US: state bar associations, court rules where outputs were filed.
+- Document everything for regulators: what happened, what changed, what's being done to prevent recurrence.
+
+**Day 3–14: Root cause + remediation.**
+- Postmortem: was this a retrieval failure (citation existed but was misattributed)? A generation failure (citation entirely fabricated)? A grounding failure (model ignored retrieval)?
+- Specific fixes per root cause: better retrieval ranking, citation-verification step, prompt reinforcement, fine-tune correction, or human-in-loop gate.
+
+**Day 14–30: Policy update + organizational learning.**
+- Add the named failure mode to the eval suite. Run weekly until clean.
+- Update the product's hallucination policy publicly if material.
+- Brief other clients on the issue, the fix, and the new safeguards - proactively, not reactively.
+
+**Ongoing - Insurance & contractual protections.**
+- AI E&O coverage that explicitly covers hallucination incidents (limited but growing market in 2026).
+- Customer contracts include indemnification limits for AI-generated content with appropriate carve-outs for gross negligence.
+
+**The framing for legal leadership:**
+
+The 2026 incidents have established a duty of care. 'The model made it up' is not a defense - the user (and especially the lawyer with bar obligations) is responsible for verifying. Our product's responsibility is to make verification frictionless: inline citations, source links, verification tools, and explicit disclosure when content is generative vs retrieved.
+
+**The framing for product leadership:**
+
+Hallucination is now a P0 incident class, like a security breach. Treat it accordingly: named on-call, runbooks, SLA on disclosure, post-mortem with regulatory notification path. The companies that won't survive 2027 are the ones that treat this as a 'AI being AI' phenomenon rather than a managed product risk."
 
 ---
 
@@ -3643,8 +4787,8 @@ Error analysis is discovery. Automated evals are measurement. Discovery must pre
 5. **Consider failure modes** - What can go wrong?
 6. **End with monitoring** - How do you know it works?
 7. **Acknowledge uncertainty** - It is okay to say "I would research this more"
-8. **Cite benchmarks specifically** - SWE-bench Verified, LiveCodeBench, AIME 2025 show you track the field
-9. **Know the 2026 landscape** - Claude 3.7 Sonnet, o3, Gemini 2.0 Flash, DeepSeek-R1, Grok 3
+8. **Cite benchmarks specifically** - SWE-bench Verified (Mythos Preview 93.9%, Opus 4.7 Adaptive 87.6%), ARC-AGI-2 (GPT-5.5 85.0%), AIME 2025, OSWorld, τ²-bench
+9. **Know the May 2026 landscape** - Claude Opus 4.7, GPT-5.5 / GPT-5.5 Instant, Gemini 3.1 Pro, DeepSeek V4 Pro / Flash, Llama 4 Scout / Maverick, Kimi K2.6, Qwen 3.6 Max, Mistral Medium 3.5, Gemma 4. Reference the May AI-security inflection (Mythos, Daybreak, MDASH, first AI-built zero-day in the wild) and EU AI Act enforcement (Aug 2, 2026)
 
 ---
 
@@ -3657,8 +4801,20 @@ Error analysis is discovery. Automated evals are measurement. Discovery must pre
 - [Anthropic Documentation](https://docs.anthropic.com/)
 - [Claude Code Documentation](https://docs.anthropic.com/claude-code)
 - [OpenHands GitHub](https://github.com/All-Hands-AI/OpenHands)
-- [SWE-bench Leaderboard](https://www.swebench.com/)
+- [SWE-bench Verified Leaderboard](https://www.swebench.com/)
+- [ARC-AGI-2 Leaderboard](https://arcprize.org/leaderboard)
 - [LiveCodeBench](https://livecodebench.github.io/)
+- [OSWorld benchmark](https://benchlm.ai/benchmarks/osWorld)
+- [Sierra τ²-bench](https://github.com/sierra-research/tau2-bench)
+- [MCP Roadmap 2026](https://thenewstack.io/model-context-protocol-roadmap-2026/)
+- [A2A Protocol v1.0 (Google Cloud blog)](https://cloud.google.com/blog/products/ai-machine-learning/agent2agent-protocol-is-getting-an-upgrade)
+- [EU AI Act Implementation Timeline](https://artificialintelligenceact.eu/implementation-timeline/)
+- [Anthropic - Constitutional Classifiers](https://www.anthropic.com/research/constitutional-classifiers)
+- [Anthropic - Project Vend Phase 2](https://www.anthropic.com/research/project-vend-2)
+- [Google Security - AI Threats in the Wild (April 2026)](https://security.googleblog.com/2026/04/ai-threats-in-wild-current-state-of.html)
+- [OpenSSF Model Signing (sigstore/model-transparency)](https://github.com/sigstore/model-transparency)
+- [Hamel Husain - Evals FAQ](https://hamel.dev/blog/posts/evals-faq/)
+- [Eugene Yan - How to Interview ML/AI Engineers](https://eugeneyan.com/writing/how-to-interview/)
 - Liu et al. "Lost in the Middle: How Language Models Use Long Contexts" 2023
 - Yao et al. "ReAct: Synergizing Reasoning and Acting in Language Models" 2023
 - Husain & Shankar. "Evals for AI Engineers, PMs & QAs" (Maven, 2025)
