@@ -2,9 +2,9 @@
 
 This chapter provides a comprehensive guide to the model landscape as of **May 2026**, covering model families, capabilities, and selection criteria for production systems.
 
-> **Last verified: May 25, 2026.** The model landscape evolves rapidly. Always cross-check with provider pricing pages and release notes.
+> **Last verified: May 29, 2026.** The model landscape evolves rapidly. Always cross-check with provider pricing pages and release notes.
 >
-> **May 2026 - what's new since the April refresh:** OpenAI GPT-5.5 (April 23) and GPT-5.5 Instant (May 5, default in ChatGPT); Claude Opus 4.7 (April 16, GA on Bedrock/Vertex/Foundry); Claude Mythos Preview (restricted; Project Glasswing partners only); Google Gemma 4 (April 2, Apache 2.0) and Gemini 3.2 Flash (quiet rollout May 5); DeepSeek V4 Pro and V4 Flash (April 24; 75% V4 Pro discount made **permanent** May 22, new list price $0.435/$0.87 per 1M from June 1); Moonshot Kimi K2.6 (April 20, 1T MoE / 32B active); Alibaba Qwen 3.6 Plus / 3.6-35B-A3B / 3.6 Max-Preview; Mistral Medium 3.5 (April 29, unified chat/reasoning/coding/vision); Meta Muse Spark (April 8, first closed-weight Meta model); Llama 4 Behemoth release paused through fall 2026 amid capability concerns. SWE-bench Verified leader: Claude Mythos Preview 93.9%; ARC-AGI-2 leader: GPT-5.5 at 85.0%.
+> **May 2026 - what's new since the April refresh:** Anthropic Claude Opus 4.8 (May 28, same $5/$25 price as Opus 4.7; Dynamic Workflows research preview with hundreds of parallel subagents; fast mode at $10/$50 is 3x cheaper than the Opus 4.7 fast mode); OpenAI GPT-5.5 (April 23) and GPT-5.5 Instant (May 5, default in ChatGPT); Claude Opus 4.7 (April 16, GA on Bedrock/Vertex/Foundry); Claude Mythos Preview (restricted; Project Glasswing partners only); Google Gemma 4 (April 2, Apache 2.0) and Gemini 3.2 Flash (quiet rollout May 5); DeepSeek V4 Pro and V4 Flash (April 24; 75% V4 Pro discount made **permanent** May 22, new list price $0.435/$0.87 per 1M from June 1); Moonshot Kimi K2.6 (April 20, 1T MoE / 32B active); Alibaba Qwen 3.6 Plus / 3.6-35B-A3B / 3.6 Max-Preview; Mistral Medium 3.5 (April 29, unified chat/reasoning/coding/vision); Meta Muse Spark (April 8, first closed-weight Meta model); Llama 4 Behemoth release paused through fall 2026 amid capability concerns. SWE-bench Verified leaders: Claude Mythos Preview 93.9%, GPT-5.5 88.7%, Claude Opus 4.8 88.6%, Claude Opus 4.7 87.6%; ARC-AGI-2 leader: GPT-5.5 at 85.0%.
 
 ## Table of Contents
 
@@ -28,25 +28,58 @@ This chapter provides a comprehensive guide to the model landscape as of **May 2
 
 | Tier | Characteristics | Examples | Use Case |
 |------|-----------------|----------|----------|
-| **Frontier** | State-of-the-art reasoning, agentic mastery | Claude Opus 4.6, GPT-5.4, Gemini 3.1 Pro, Grok 4 | Complex reasoning, coding, production agents |
+| **Frontier** | State-of-the-art reasoning, agentic mastery | Claude Opus 4.8, GPT-5.5, Gemini 3.1 Pro, Grok 4.3 | Complex reasoning, coding, production agents |
 | **Fast/Efficient** | Sub-200ms, cost-optimized | Gemini 3.1 Flash, GPT-5.4-mini, Claude Haiku 4.5 | High-volume streaming, UI, real-time |
 | **Battle-Tested** | Mature, widely-deployed, stable | Claude Sonnet 4.6, GPT-4o, Gemini 2.5 Pro | Enterprise production workloads |
 | **Small/Edge** | Private, edge, specialized | Llama 4 Scout, Mistral Small 4, Phi-4 | Local privacy, on-device, MoE-efficient |
-| **Reasoning-Heavy** | Extended internal CoT | GPT-5.4 Pro, DeepSeek-R1, Claude Opus 4.6 (thinking) | Math, code debug, multi-step logic |
+| **Reasoning-Heavy** | Extended internal CoT | Claude Opus 4.8 (thinking), GPT-5.5 reasoning, DeepSeek-R1 | Math, code debug, multi-step logic |
 
 ### By Reasoning Mode (2025–2026)
 
 | Mode | Capability | Models | Use Case |
 |------|------------|--------|----------|
 | **Standard** | Fast, intuitive response | GPT-5.4-mini, Claude Sonnet 4.6 | Chat, simple extraction |
-| **Extended Thinking** | Internal scratchpad CoT before output | Claude Opus 4.6, GPT-5.4 Pro, DeepSeek-R1 | Math, code debugging, planning |
-| **Hybrid** | User-controllable reasoning depth | Claude Opus 4.6, GPT-5.4 | Variable complexity tasks |
+| **Extended Thinking** | Internal scratchpad CoT before output | Claude Opus 4.8, GPT-5.5 reasoning, DeepSeek-R1 | Math, code debugging, planning |
+| **Hybrid** | User-controllable reasoning depth | Claude Opus 4.8, GPT-5.5 | Variable complexity tasks |
 
 ---
 
-## Frontier Models (April–May 2026)
+## Frontier Models (May 2026)
 
-### Claude Opus 4.7 (Anthropic) - May 2026 NEW
+### Claude Opus 4.8 (Anthropic) - May 2026 NEW
+
+| Attribute | Value |
+|-----------|-------|
+| Context Window | 1M tokens (standard pricing across the full window) |
+| Input Cost | $5.00 / 1M tokens (same as 4.7) |
+| Output Cost | $25.00 / 1M tokens (same as 4.7) |
+| Cache: 5m write | $6.25 / 1M tokens |
+| Cache: 1h write | $10.00 / 1M tokens |
+| Cache: hit / refresh | $0.50 / 1M tokens |
+| Batch API | $2.50 / $12.50 per 1M (50% discount) |
+| Fast mode (research preview) | $10 / $50 per 1M (about 2.5x faster; 3x cheaper than the Opus 4.7 fast mode which was $30 / $150) |
+| Extended Thinking | Native, adaptive mode |
+| Multimodal | Text + Higher-resolution Vision |
+| SWE-bench Verified | 88.6% |
+| SWE-Bench Pro | 69.2% (up from 64.3% on Opus 4.7) |
+| Terminal-Bench 2.1 | 74.6% (GPT-5.5 still leads at 78.2%) |
+| GDPval-AA | 1890 Elo (up from 1753 on Opus 4.7) |
+| OSWorld-Verified | 82.3% |
+| Online-Mind2Web | 84% |
+| Released | May 28, 2026 (GA on Claude API, AWS Bedrock, Vertex AI) |
+
+**Best for:** Long-running autonomous coding work in Claude Code, codebase-scale migrations, agentic workflows that need parallel subagents, and workloads where the alignment and honesty gains matter.
+
+**Key features over Opus 4.7:**
+- **Dynamic Workflows** (research preview): Claude plans the work and runs hundreds of parallel subagents in a single Claude Code session, verifies their outputs, and reports back. Suited for codebase-scale migrations across hundreds of thousands of lines.
+- **Mid-task system messages**: The Messages API now accepts system messages mid-conversation, useful for steering long agent runs without ending the session.
+- **Optional fast mode** at roughly 2.5x speed for $10 / $50 per 1M, priced 3x lower than the Opus 4.7 fast mode.
+- **Effort-control toggle** in `claude.ai` and Cowork lets users tune reasoning depth per turn.
+- **Expanded Claude Code rate limits**.
+
+**Considerations:** Tokenizer is the same one introduced in Opus 4.7 (up to 35% more tokens than the pre-4.7 tokenizer for the same fixed text). GPT-5.5 still holds the SWE-Bench Verified leaderboard at 88.7% and leads Terminal-Bench 2.1 at 78.2%. GPQA Diamond slipped 0.6 pts versus Opus 4.7. Anthropic's tokenizer change means token counts and bills for the same text are not directly comparable to pre-4.7 models. There is **no Claude Sonnet 4.8 release** as of May 29, 2026; Sonnet 4.6 remains the production workhorse.
+
+### Claude Opus 4.7 (Anthropic)
 
 | Attribute | Value |
 |-----------|-------|
@@ -256,6 +289,7 @@ This chapter provides a comprehensive guide to the model landscape as of **May 2
 | Model | Reasoning | Coding | Context | Agentic | Cost |
 |-------|-----------|--------|---------|---------|------|
 | Claude Mythos Preview (restricted) | ★★★★★ | ★★★★★ | ★★★★★ | ★★★★★ | n/a |
+| Claude Opus 4.8 | ★★★★★ | ★★★★★ | ★★★★★ | ★★★★★ | $$$$ |
 | Claude Opus 4.7 | ★★★★★ | ★★★★★ | ★★★★★ | ★★★★★ | $$$$ |
 | GPT-5.5 | ★★★★★ | ★★★★★ | ★★★★★ | ★★★★★ | $$$$ |
 | Claude Opus 4.6 | ★★★★★ | ★★★★★ | ★★★★★ | ★★★★★ | $$$$ |
@@ -377,24 +411,27 @@ While frontier models lead on benchmarks, many enterprise systems rely on **batt
 
 ## Specialized Models
 
-### Coding Mastery (April 2026)
+### Coding Mastery (May 2026)
 
 | Model | Specialization | Why it wins |
 |-------|----------------|-------------|
-| **Claude Sonnet 4.6 / Opus 4.6** | Software Engineering | Powers Claude Code; top SWE-bench scores; 1M context |
-| **GPT-5.4** | Agentic coding | Native computer-use; strong full-stack coding |
-| **Llama 4 Maverick** | Open-source coding | Beats GPT-4o on coding benchmarks; open weights |
-| **Qwen2.5-Coder-32B** | Self-hosted coding | Best price-to-performance for self-hosted IDEs |
-| **DeepSeek-R1-Distill-70B** | Open reasoning+code | Best open reasoning model for coding at 70B |
+| **GPT-5.5** | Single-shot coding leader | SWE-bench Verified 88.7% (#1); Terminal-Bench 2.1 78.2% (#1) |
+| **Claude Opus 4.8** | Long-running agentic coding | SWE-bench Verified 88.6%; SWE-Bench Pro 69.2%; Dynamic Workflows with parallel subagents in Claude Code |
+| **Claude Opus 4.7** | Predecessor flagship coding | SWE-bench Verified 87.6%; SWE-Bench Pro 64.3% |
+| **Claude Sonnet 4.6** | Workhorse coding | Powers Claude Code at lower cost; 1M context |
+| **Llama 4 Maverick** | Open-source coding | Open weights; competitive on coding benchmarks |
+| **Qwen 3.6 Coder / Qwen2.5-Coder-32B** | Self-hosted coding | Best price-to-performance for self-hosted IDEs |
+| **DeepSeek V4 Pro / R1-Distill-70B** | Open reasoning + code | Best open reasoning at 70B; V4 Pro is open-weight 1.6T/49B-active MoE |
 
 ### Reasoning & Math
 
 | Model | Approach | Best For |
 |-------|----------|----------|
-| **GPT-5.4 Pro** | Maximum-compute reasoning | Competition math, hardest multi-step problems |
-| **Claude Opus 4.6 (thinking)** | Adaptive thinking | Software planning, complex logic, agentic reasoning |
+| **Claude Opus 4.8 (thinking)** | Adaptive thinking with parallel subagents | Software planning, codebase-scale work, agentic reasoning |
+| **GPT-5.5 reasoning** | Maximum-compute reasoning | Competition math (AIME 2025 81.2% on Instant), ARC-AGI-2 85.0% leader |
+| **Gemini 3.1 Pro Deep Think** | Sustained chain-of-thought | Scientific reasoning, GPQA Diamond leader |
 | **DeepSeek-R1** | RL-based thinking | Open-source logical inference, competitive math |
-| **Grok 4 (DeepSearch)** | Web-grounded reasoning | Research tasks needing live information |
+| **Grok 4.3 (DeepSearch)** | Web-grounded reasoning | Research tasks needing live information |
 
 ### Long Context (1M+)
 
@@ -402,7 +439,7 @@ While frontier models lead on benchmarks, many enterprise systems rely on **batt
 |-------|--------|-------------------|
 | **Llama 4 Scout** | 10M | Industry-leading open-weight context window |
 | **Gemini 3.1 Pro / Flash** | 1M | Best quality at 1M context; proven at scale |
-| **Claude Opus 4.6 / Sonnet 4.6** | 1M | Full 1M at standard pricing; reliable recall |
+| **Claude Opus 4.8 / 4.7 / Sonnet 4.6** | 1M | Full 1M at standard pricing; reliable recall |
 | **Llama 4 Maverick** | 1M | Open-weight 1M context with MoE efficiency |
 
 ---
@@ -448,16 +485,16 @@ While frontier models lead on benchmarks, many enterprise systems rely on **batt
 What is your primary constraint?
 
 ├── Cost → Use smaller model, consider open source
-│   ├── Very cost sensitive → GPT-5.4-mini, Claude Haiku 4.5, Gemini 3.1 Flash
-│   └── Moderate budget → Claude Sonnet 4.6, GPT-5.4
+│   ├── Very cost sensitive → DeepSeek V4 Flash, GPT-5.5-mini, Claude Haiku 4.5, Gemini 3.1 Flash
+│   └── Moderate budget → Claude Sonnet 4.6, GPT-5.5 Instant, DeepSeek V4 Pro
 │
 ├── Quality + Reasoning → Use frontier models
-│   ├── Highest reasoning → GPT-5.4 Pro, Claude Opus 4.6
-│   └── Coding + reasoning → Claude Sonnet 4.6 (Extended Thinking)
+│   ├── Highest reasoning → Claude Opus 4.8 (thinking), GPT-5.5 reasoning, Gemini 3.1 Pro Deep Think
+│   └── Coding + reasoning → Claude Opus 4.8 with Dynamic Workflows, Claude Sonnet 4.6 (Extended Thinking), GPT-5.5
 │
 ├── Latency → Use fast models
-│   ├── <100ms response → Gemini 3.1 Flash, GPT-5.4-mini
-│   └── <500ms response → Claude Haiku 4.5, Grok 4.1 Fast
+│   ├── <100ms response → Gemini 3.1 Flash, GPT-5.5-mini
+│   └── <500ms response → Claude Haiku 4.5, Claude Opus 4.8 fast mode, Grok 4.1 Fast
 │
 ├── Self-hosting → Use open models
 │   ├── Maximum capability → Llama 4 Maverick, DeepSeek-V3
@@ -470,8 +507,8 @@ What is your primary constraint?
 
 ### Semantic Routing
 
-In 2025-26, static decision trees are being replaced by **Semantic Routers**:
-- **How it works**: A small, fast embedding model vectorises the query. If it matches a "known easy" cluster → cheap model (e.g., Gemini 3.1 Flash). If it hits an "agentic/logic" cluster → Claude Opus 4.6 or GPT-5.4.
+Static decision trees are being replaced by **Semantic Routers**:
+- **How it works**: A small, fast embedding model vectorises the query. If it matches a "known easy" cluster, route to a cheap model (Gemini 3.1 Flash, DeepSeek V4 Flash, Claude Haiku 4.5). If it hits an "agentic/logic" cluster, route to Claude Opus 4.8 or GPT-5.5 with reasoning.
 - **Benefit**: Automates cost-optimization without hardcoded rules.
 - **Implementation**: Tools like `semantic-router` (Python) or custom Weaviate/Pinecone classifiers.
 

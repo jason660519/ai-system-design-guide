@@ -56,11 +56,11 @@ Committed (1-year): $2.00 / 1M input tokens (20% savings)
 
 ### May 2026 Pricing
 
-> **Last verified: May 25, 2026.** Prices change frequently. Always re-check: [OpenAI](https://developers.openai.com/api/docs/pricing), [Anthropic](https://platform.claude.com/docs/en/about-claude/pricing), [Google](https://ai.google.dev/gemini-api/docs/pricing), [xAI](https://docs.x.ai/developers/models), [DeepSeek](https://api-docs.deepseek.com/quick_start/pricing)
+> **Last verified: May 29, 2026.** Prices change frequently. Always re-check: [OpenAI](https://developers.openai.com/api/docs/pricing), [Anthropic](https://platform.claude.com/docs/en/about-claude/pricing), [Google](https://ai.google.dev/gemini-api/docs/pricing), [xAI](https://docs.x.ai/developers/models), [DeepSeek](https://api-docs.deepseek.com/quick_start/pricing)
 >
 > **Deprecations effective in 2026:** OpenAI retired GPT-4o, GPT-4.1, GPT-4.1-mini, o4-mini from ChatGPT on Feb 13, 2026; gpt-5.2-chat-latest and gpt-5.3-chat-latest deprecated May 8, 2026; Realtime API Beta removed May 12, 2026; Sora app shut down April 26, 2026 (API EOL Sep 24, 2026). Google Vertex retired `gemini-3-pro-preview` Mar 26, 2026; Project Mariner shut down May 4, 2026. Gemini 2.5 Pro/Flash deprecated June 17, 2026.
 >
-> **Price moves:** DeepSeek made its 75% V4 Pro discount **permanent** on May 22, 2026: from June 1, 2026 the new list price drops to 25% of the original ($0.435 / $0.87 per 1M input/output), and the cache-hit input price for all DeepSeek models was cut to 1/10 of the launch price on April 26, 2026. DeepSeek V4 Flash ($0.14 / $0.28 per 1M, 1M context) is now the cheapest frontier-class API by a wide margin.
+> **Price moves:** Anthropic released **Claude Opus 4.8** on May 28, 2026 at the same $5 / $25 per 1M as Opus 4.7, with an optional fast mode at $10 / $50 per 1M (about 2.5x faster and 3x cheaper than the Opus 4.7 fast mode, which was $30 / $150). DeepSeek made its 75% V4 Pro discount **permanent** on May 22, 2026: from June 1, 2026 the new list price drops to 25% of the original ($0.435 / $0.87 per 1M input/output), and the cache-hit input price for all DeepSeek models was cut to 1/10 of the launch price on April 26, 2026. DeepSeek V4 Flash ($0.14 / $0.28 per 1M, 1M context) is the cheapest frontier-class API by a wide margin.
 
 #### OpenAI (GPT-5.x Generation)
 | Model | Input / 1M | Output / 1M | Notes |
@@ -79,14 +79,15 @@ Committed (1-year): $2.00 / 1M input tokens (20% savings)
 #### Anthropic (Claude 4.x Generation)
 | Model | Input / 1M | Output / 1M | Context | Notes |
 |-------|------------|-------------|---------|-------|
-| **Claude Opus 4.7** ⭐ NEW | $5.00 | $25.00 | 1M | Released April 16, 2026 on API, Bedrock, Vertex, Microsoft Foundry. Higher-resolution vision, improved SWE. |
-| **Claude Opus 4.6** | $5.00 | $25.00 | 1M | 128K max output; adaptive thinking at standard rates |
-| **Claude Sonnet 4.6** | $3.00 | $15.00 | 1M | Covers most Opus-level tasks at lower cost |
-| **Claude Haiku 4.5** | $1.00 | $5.00 | 200K | Fastest Anthropic model; check latest for exact price |
+| **Claude Opus 4.8** ⭐ NEW | $5.00 | $25.00 | 1M | Released May 28, 2026 on API, Bedrock, Vertex AI. Dynamic Workflows research preview with parallel subagents. Optional fast mode at $10 / $50 per 1M (about 2.5x faster, 3x cheaper than the Opus 4.7 fast mode). SWE-bench Verified 88.6%; SWE-Bench Pro 69.2%; OSWorld-Verified 82.3%. |
+| **Claude Opus 4.7** | $5.00 | $25.00 | 1M | Released April 16, 2026 on API, Bedrock, Vertex, Microsoft Foundry. Higher-resolution vision, improved SWE. Fast mode: $30 / $150 per 1M. |
+| **Claude Opus 4.6** | $5.00 | $25.00 | 1M | 128K max output; adaptive thinking at standard rates. |
+| **Claude Sonnet 4.6** | $3.00 | $15.00 | 1M | Covers most Opus-level tasks at lower cost. **No Sonnet 4.8 released as of May 29, 2026.** |
+| **Claude Haiku 4.5** | $1.00 | $5.00 | 200K | Fastest Anthropic model; cache hit input $0.10 / 1M. |
 | **Claude Mythos Preview** | n/a | n/a | - | Restricted to ~11 Project Glasswing partners; not generally available. |
 
 > [!NOTE]
-> **Claude 1M context at standard pricing**: Opus 4.6 and Sonnet 4.6 include the full 1M token context window at standard rates -- no premium tier for long context. Batch API offers 50% discount. Cache hits cost 10% of standard input price.
+> **Claude 1M context at standard pricing**: Opus 4.8, Opus 4.7, Opus 4.6, and Sonnet 4.6 include the full 1M token context window at standard rates with no premium tier for long context. Batch API offers a 50% discount. Cache hits cost 10% of the standard input price. Fast mode pricing on Opus 4.8 ($10 / $50 per 1M) and Opus 4.7 / 4.6 ($30 / $150 per 1M) stacks with caching multipliers but is not available on the Batch API or Claude Platform on AWS.
 
 #### Google (Gemini 3.x Generation)
 | Model | Input / 1M | Output / 1M | Context | Notes |
