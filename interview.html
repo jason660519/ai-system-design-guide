@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧠 AI System Design Guide - 模擬面試</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Prism.js for Code Highlighting -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Page 2: Mock Interview Simulator -->
+            <section id="page-interview" class="page-section active">
+                <div class="interview-layout">
+                    <!-- Left: Questions List -->
+                    <div class="interview-sidebar">
+                        <div class="panel-header">
+                            <h3 data-i18n="question_bank_title">面試問題庫</h3>
+                            <select id="question-category-filter">
+                                <option value="all" data-i18n="cat_all">所有類別</option>
+                                <option value="rag" data-i18n="cat_rag">RAG 架構</option>
+                                <option value="agent" data-i18n="cat_agent">Agentic 系統</option>
+                                <option value="model" data-i18n="cat_model">模型選擇</option>
+                                <option value="optimization" data-i18n="cat_optimization">推論優化</option>
+                                <option value="evaluation" data-i18n="cat_evaluation">評估系統</option>
+                                <option value="mlops" data-i18n="cat_mlops">生產與 MLOps</option>
+                                <option value="scenario" data-i18n="cat_scenario">系統設計情境</option>
+                                <option value="advanced" data-i18n="cat_advanced">前沿與進階</option>
+                            </select>
+                        </div>
+                        <div class="question-list" id="interview-question-list">
+                            <!-- Populated dynamically by JS -->
+                            <div class="skeleton-loader" style="height: 60px; margin-bottom: 8px;"></div>
+                            <div class="skeleton-loader" style="height: 60px; margin-bottom: 8px;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Workspace -->
+                    <div class="interview-workspace" id="interview-workspace-area">
+                        <div class="empty-state-card" id="interview-empty-state">
+                            <i class="fa-solid fa-comments"></i>
+                            <h3 data-i18n="interview_empty_title">準備好接受挑戰了嗎？</h3>
+                            <p data-i18n="interview_empty_desc">從左側列表中選擇一個系統設計問題，或者點擊下方按鈕隨機挑選一題開始模擬面試。</p>
+                            <button class="primary-btn" id="random-question-btn">
+                                <i class="fa-solid fa-shuffle"></i>
+                                <span data-i18n="random_btn">隨機挑選一題</span>
+                            </button>
+                        </div>
+
+                        <!-- Active Interview Panel (Hidden by default) -->
+                        <div class="active-interview-panel" id="active-interview-panel" style="display: none;">
+                            <div class="interview-card-header">
+                                <span class="badge" id="active-question-category">RAG 架構</span>
+                                <h3 id="active-question-title">Q1: Walk me through the architecture of a production RAG system</h3>
+                                <div class="question-meta">
+                                    <span><i class="fa-solid fa-gauge-high"></i> <span data-i18n="difficulty_label">Senior / Staff</span></span>
+                                    <span id="active-question-status"><i class="fa-regular fa-circle-question"></i> 未作答</span>
+                                </div>
+                            </div>
+
+                            <div class="interview-tab-nav">
+                                <button class="tab-btn active" data-tab="tab-practice" data-i18n="tab_practice">回答練習</button>
+                                <button class="tab-btn" id="tab-feedback-btn" data-tab="tab-feedback" data-i18n="tab_feedback" disabled>評分報告</button>
+                                <button class="tab-btn" id="tab-suggested-btn" data-tab="tab-suggested" data-i18n="tab_suggested">標準答案參考</button>
+                            </div>
+
+                            <div class="interview-tab-content">
+                                <!-- Tab 1: Practice -->
+                                <div id="tab-practice" class="tab-pane active">
+                                    <div class="prompt-box">
+                                        <h4 data-i18n="interviewer_hint_title"><i class="fa-solid fa-circle-info"></i> 面試官提示：</h4>
+                                        <p id="active-question-expectation">面試官在此題主要考察：RAG Ingestion 與 Query 完整流程、Chunking 策略的權衡、向量資料庫與 Hybrid Search 的選擇、Rerank 的必要性及評估指標。</p>
+                                    </div>
+                                    
+                                    <div class="answer-input-container">
+                                        <label for="user-answer-textarea" data-i18n="textarea_label">在此寫下您的回答（建議使用 Markdown 結構化表達，可混合中英文）：</label>
+                                        <textarea id="user-answer-textarea" placeholder="第一步，我會建立資料攝入管線... 然後我會使用 Hybrid Search..." data-i18n-placeholder="textarea_placeholder"></textarea>
+                                    </div>
+
+                                    <div class="practice-actions">
+                                        <div class="eval-mode-selector">
+                                            <label>
+                                                <input type="radio" name="eval-mode" value="self" checked>
+                                                <span data-i18n="mode_self">自我檢測評分</span>
+                                            </label>
+                                            <label>
+                                                <input type="radio" name="eval-mode" value="ai">
+                                                <span data-i18n="mode_ai">AI 模擬官診斷</span>
+                                            </label>
+                                        </div>
+                                        <button class="primary-btn" id="submit-answer-btn">
+                                            <i class="fa-solid fa-paper-plane"></i>
+                                            <span data-i18n="submit_answer_btn">提交回答</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Tab 2: Feedback & Evaluation -->
+                                <div id="tab-feedback" class="tab-pane">
+                                    <!-- Self Evaluation Checklist -->
+                                    <div id="self-eval-container" style="display: none;">
+                                        <div class="alert-box success">
+                                            <h4 data-i18n="self_eval_alert_title"><i class="fa-solid fa-clipboard-check"></i> 請進行自我檢測評分</h4>
+                                            <p data-i18n="self_eval_alert_desc">以下是資深/面試官期望回答中包含的關鍵點，請誠實勾選您剛才答案中提及的部分，系統將為您評分：</p>
+                                        </div>
+                                        <div class="checklist" id="self-eval-checklist">
+                                            <!-- Populated dynamically -->
+                                        </div>
+                                        <button class="primary-btn mt-4" id="submit-self-eval-btn">
+                                            <i class="fa-solid fa-calculator"></i>
+                                            <span data-i18n="calc_score_btn">計算分數並完成此題</span>
+                                        </button>
+                                    </div>
+
+                                    <!-- AI Evaluation Results -->
+                                    <div id="ai-eval-container" style="display: none;">
+                                        <div class="ai-score-card">
+                                            <div class="ai-score-ring">
+                                                <svg viewBox="0 0 36 36" class="circular-chart">
+                                                    <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                                    <path class="circle" id="ai-score-circle" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                                    <text x="18" y="20.35" class="percentage" id="ai-score-text">0</text>
+                                                </svg>
+                                            </div>
+                                            <div class="ai-score-meta">
+                                                <h4><span data-i18n="ai_rating_label">AI 評級：</span><span id="ai-rating-label">中等</span></h4>
+                                                <p data-i18n="ai_eval_timestamp">評估基準時間：2026年6月，基於最新生產環境標準</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="feedback-sections">
+                                            <div class="feedback-card">
+                                                <h5 data-i18n="strengths_title"><i class="fa-solid fa-circle-check text-success"></i> 答題亮點 (Strengths)</h5>
+                                                <div class="feedback-content" id="ai-strengths-content"></div>
+                                            </div>
+                                            <div class="feedback-card">
+                                                <h5 data-i18n="improvements_title"><i class="fa-solid fa-circle-exclamation text-warning"></i> 待改善與優化之處 (Improvements)</h5>
+                                                <div class="feedback-content" id="ai-improvements-content"></div>
+                                            </div>
+                                        </div>
+
+                                        <!-- AI Follow-up Chat -->
+                                        <div class="ai-chat-section">
+                                            <h5 data-i18n="followup_title"><i class="fa-solid fa-robot"></i> 面試官追問 (Follow-up Interaction)</h5>
+                                            <div class="chat-history" id="ai-chat-history">
+                                                <!-- Messages populated dynamically -->
+                                            </div>
+                                            <div class="chat-input-wrapper">
+                                                <input type="text" id="ai-chat-input" placeholder="對面試官的追問進行回覆..." data-i18n-placeholder="chat_input_placeholder">
+                                                <button class="primary-btn" id="send-ai-chat-btn">
+                                                    <i class="fa-solid fa-reply"></i>
+                                                    <span data-i18n="send_reply_btn">送出回覆</span>
+                                                </button>
+                                            </div>
+                                            <p class="chat-turns-hint"><span data-i18n="chat_turns_hint">剩餘對話輪數：</span><span id="chat-turns-count">3</span></p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Tab 3: Suggested / Sample Answer -->
+                                <div id="tab-suggested" class="tab-pane">
+                                    <div class="sample-answer-box">
+                                        <div class="sample-answer-header">
+                                            <h4 data-i18n="sample_answer_title">標準參考答案 (Sample Answer)</h4>
+                                            <button class="action-btn secondary btn-sm" id="copy-sample-btn">
+                                                <i class="fa-regular fa-copy"></i> <span data-i18n="copy_btn">複製</span>
+                                            </button>
+                                        </div>
+                                        <div class="sample-answer-body markdown-body" id="suggested-answer-content">
+                                            <!-- Dynamic sample answer markdown -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Required JS Libraries -->
+    <!-- Marked for MD rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <!-- Prism.js for code highlight -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+
+    <!-- Global Application Scripts -->
+    <script src="layout.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

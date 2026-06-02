@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 AI System Design Guide - 單元測試與語音診斷 (TDD Suite)</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-base: #09090b;
+            --bg-surface: #121214;
+            --bg-surface-elevated: #1a1a1e;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-primary: #f4f4f5;
+            --text-secondary: #a1a1aa;
+            --primary: #8b5cf6;
+            --primary-gradient: linear-gradient(135deg, #8b5cf6 0%, #d946ef 100%);
+            --success: #10b981;
+            --success-bg: rgba(16, 185, 129, 0.1);
+            --danger: #ef4444;
+            --danger-bg: rgba(239, 68, 68, 0.1);
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 28px;
+            margin-bottom: 8px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        .diagnostic-card {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        .diagnostic-card h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+        
+        button {
+            background: var(--primary-gradient);
+            border: none;
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            transition: opacity 0.2s;
+        }
+        
+        button:hover { opacity: 0.9; }
+        
+        button.secondary {
+            background: var(--bg-surface-elevated);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+        
+        button.secondary:hover { border-color: rgba(255,255,255,0.2); }
+        
+        /* Test results styling */
+        .test-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        
+        .test-case {
+            background-color: var(--bg-surface-elevated);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .test-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .test-status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        
+        .test-status.pass {
+            background-color: var(--success-bg);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+        
+        .test-status.fail {
+            background-color: var(--danger-bg);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+        
+        .test-details {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--text-secondary);
+            background-color: var(--bg-base);
+            padding: 8px 12px;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        
+        .summary-bar {
+            display: flex;
+            justify-content: space-between;
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            padding: 16px 24px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            font-weight: 600;
+            font-size: 15px;
+        }
+        
+        .summary-bar span.green { color: var(--success); }
+        .summary-bar span.red { color: var(--danger); }
+        
+        .home-link {
+            display: block;
+            text-align: center;
+            color: var(--primary);
+            text-decoration: none;
+            margin-top: 30px;
+            font-size: 13px;
+        }
+        
+        .home-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧪 TDD 單元測試與語音診斷套件</h1>
+            <p class="subtitle">AI System Design Guide - Frontend Testing Sandbox</p>
+        </header>
+
+        <!-- Summary Bar -->
+        <div class="summary-bar">
+            <span>測試結果總覽 (Test Results):</span>
+            <span>
+                通過: <span class="green" id="summary-pass-count">0</span> / 
+                失敗: <span class="red" id="summary-fail-count">0</span>
+            </span>
+        </div>
+
+        <!-- Section 1: Audio Playback Diagnostic -->
+        <div class="diagnostic-card">
+            <h3><i class="fa-solid fa-volume-high"></i> 實體聲音輸出診斷 (Bilingual Audio Output Test)</h3>
+            <p class="subtitle">點擊下方按鈕測試您的瀏覽器是否能正確發出聲音。系統會以標準英文語音念出專有名詞 (RAG, KV Cache)，並以中文語音唸出說明，用以驗證英中雙語語音排程機制。</p>
+            <div class="btn-group">
+                <button id="test-audio-btn"><i class="fa-solid fa-play"></i> 播放實體測試語音</button>
+                <button class="secondary" id="stop-audio-btn"><i class="fa-solid fa-stop"></i> 停止語音</button>
+            </div>
+            <p id="audio-output-log" style="margin-top: 12px; font-size:12px; color:var(--text-secondary); font-style:italic;"></p>
+        </div>
+
+        <!-- Section 2: Automated Unit Tests Run -->
+        <div class="diagnostic-card">
+            <h3><i class="fa-solid fa-circle-check"></i> 自動化測試結果 (Automated Unit Tests)</h3>
+            <div class="test-list" id="test-results-container">
+                <!-- Injected dynamically -->
+            </div>
+        </div>
+
+        <a href="index.html" class="home-link"><i class="fa-solid fa-chevron-left"></i> 返回系統首頁 (Back to Home)</a>
+    </div>
+
+    <!-- Include app.js to access stripMarkdownForTTS, translations, parseGlossary, etc. -->
+    <script src="app.js"></script>
+    
+    <script>
+        // TDD Assertion Helper Framework
+        const assertions = [];
+        
+        function assertEqual(testName, actual, expected) {
+            const isPass = actual === expected;
+            assertions.push({
+                name: testName,
+                status: isPass ? 'pass' : 'fail',
+                details: `Actual:\n${actual}\n\nExpected:\n${expected}`
+            });
+        }
+        
+        function assertOk(testName, condition, details = 'Condition was false') {
+            assertions.push({
+                name: testName,
+                status: condition ? 'pass' : 'fail',
+                details: condition ? 'Condition satisfied' : details
+            });
+        }
+
+        // ==========================================================================
+        // UNIT TESTS (ASYNC FLOW)
+        // ==========================================================================
+        async function runTestSuite() {
+            // Test 1: Test stripMarkdownForTTS matches expectations
+            try {
+                const mdInput = "### Q1: Walk me through the architecture of a **production RAG** system.\nWe use `Prism` and links like [README](README.md).\n- Item 1\n- Item 2";
+                const cleanText = stripMarkdownForTTS(mdInput);
+                const expectedText = "Q1: Walk me through the architecture of a production RAG system. We use Prism and links like README. Item 1 Item 2";
+                assertEqual("Test 1: stripMarkdownForTTS - Markdown syntax removal", cleanText, expectedText);
+            } catch (e) {
+                assertOk("Test 1: stripMarkdownForTTS - Exception thrown", false, e.message);
+            }
+
+            // Test 2: Test parseGlossary parses standard term line
+            try {
+                const sampleGlossaryText = "# Glossary\n**Agentic Coding** — LLM autonomously editing files.\n**BM25** - Traditional keyword search.";
+                const parsed = parseGlossary(sampleGlossaryText);
+                assertOk("Test 2: parseGlossary - Correctly parse em-dash & hyphen", parsed.length === 2 && parsed[0].term === "Agentic Coding" && parsed[1].term === "BM25");
+            } catch (e) {
+                assertOk("Test 2: parseGlossary - Exception thrown", false, e.message);
+            }
+
+            // Test 3: Test i18n Translation Tables Parity (ensure all keys are mirrored)
+            try {
+                const zhKeys = Object.keys(translations.zh).sort();
+                const enKeys = Object.keys(translations.en).sort();
+                
+                const missingInEn = zhKeys.filter(k => !enKeys.includes(k));
+                const missingInZh = enKeys.filter(k => !zhKeys.includes(k));
+                
+                const isMirror = missingInEn.length === 0 && missingInZh.length === 0;
+                assertOk(
+                    "Test 3: Translations Parity - Keys completeness check", 
+                    isMirror, 
+                    `Missing in English: ${JSON.stringify(missingInEn)}\nMissing in Chinese: ${JSON.stringify(missingInZh)}`
+                );
+            } catch (e) {
+                assertOk("Test 3: Translations parity check error", false, e.message);
+            }
+
+            // Test 4: Test parseQuestionBank correctly identifies Q1 header
+            try {
+                const sampleQBankText = "## RAG Architecture Questions\n### Q1: Walk me through RAG\n**What interviewers look for:**\n- Ingestion\n**Strong answer covers:**\n- Rubric 1\n**Sample Answer:**\nUse Qdrant\n**Follow-up to expect:**\nWhat about charts?";
+                const questions = parseQuestionBank(sampleQBankText);
+                
+                const q = questions[0];
+                const isValid = questions.length === 1 && 
+                                q.id === "Q1" && 
+                                q.title === "Walk me through RAG" && 
+                                q.category === "RAG Architecture" &&
+                                q.rubric.includes("Rubric 1") && 
+                                q.sampleAnswer.trim() === "Use Qdrant" && 
+                                q.followUps.includes("What about charts?");
+                assertOk("Test 4: parseQuestionBank - Structured questions extraction", isValid, `Parsed output:\n${JSON.stringify(q, null, 2)}`);
+            } catch (e) {
+                assertOk("Test 4: parseQuestionBank - Exception thrown", false, e.message);
+            }
+
+            // Test 5: Test generatePodcastScriptForTerm outputs correct format
+            try {
+                const card = { term: "KV Cache", definition: "Attention computation cache" };
+                const script = generatePodcastScriptForTerm(card);
+                const isValid = Array.isArray(script) && 
+                                script.length === 4 && 
+                                script[0].speaker === 'host-a' && 
+                                script[0].text.includes("KV Cache") &&
+                                script[1].speaker === 'host-b' && 
+                                script[1].text.includes("Attention computation cache");
+                assertOk("Test 5: generatePodcastScriptForTerm - Template format check", isValid, `Parsed output:\n${JSON.stringify(script, null, 2)}`);
+            } catch (e) {
+                assertOk("Test 5: generatePodcastScriptForTerm - Exception thrown", false, e.message);
+            }
+
+            // Test 6: Test generateInterviewRoleplayScript outputs valid turns
+            try {
+                const q = { title: "KV Cache Architecture", sampleAnswer: "We store keys and values. This reduces latency. It saves compute." };
+                const script = generateInterviewRoleplayScript(q);
+                const isValid = Array.isArray(script) && 
+                                script.length > 2 && 
+                                script[0].speaker === 'interviewer' && 
+                                script[1].speaker === 'candidate' &&
+                                script[1].text.includes("We store keys and values");
+                assertOk("Test 6: generateInterviewRoleplayScript - Turns split and assembly", isValid, `Parsed output:\n${JSON.stringify(script, null, 2)}`);
+            } catch (e) {
+                assertOk("Test 6: generateInterviewRoleplayScript - Exception thrown", false, e.message);
+            }
+
+            // Test 7: Test splitMixedText splits mixed English/Chinese correctly
+            try {
+                const mixedInput = "好的，首先，We use semantic chunking to parse details. 然後進行檢索。";
+                const segments = splitMixedText(mixedInput);
+                const isValid = Array.isArray(segments) && 
+                                segments.length === 3 && 
+                                segments[0].lang === 'zh' && segments[0].text === "好的，首先，" &&
+                                segments[1].lang === 'en' && segments[1].text === "We use semantic chunking to parse details." &&
+                                segments[2].lang === 'zh' && segments[2].text === "然後進行檢索。";
+                assertOk("Test 7: splitMixedText - Bilingual text partitioner", isValid, `Parsed output:\n${JSON.stringify(segments, null, 2)}`);
+            } catch (e) {
+                assertOk("Test 7: splitMixedText - Exception thrown", false, e.message);
+            }
+
+            // Test 8: selectVoiceForSpeech - Case-insensitive and underscore-hyphen normalization
+            try {
+                const mockVoices = [
+                    { name: 'Google Tingting', lang: 'zh_CN' },
+                    { name: 'Siri Mei-Jia', lang: 'zh-tw' },
+                    { name: 'Siri Samantha', lang: 'en-US' },
+                    { name: 'Daniel', lang: 'en_GB' }
+                ];
+                const selectedZh = selectVoiceForSpeech(mockVoices, 'zh', 'host-b');
+                const selectedEn = selectVoiceForSpeech(mockVoices, 'en', 'host-a');
+                
+                const isMatch = selectedZh && selectedZh.name === 'Siri Mei-Jia' &&
+                                selectedEn && selectedEn.name === 'Siri Samantha';
+                assertOk("Test 8: selectVoiceForSpeech - Case-insensitivity & local normalization", isMatch, `Zh selected: ${selectedZh?.name}, En selected: ${selectedEn?.name}`);
+            } catch (e) {
+                assertOk("Test 8: selectVoiceForSpeech - Exception thrown", false, e.message);
+            }
+
+            // Test 9: fetchWithTimeout - Timeout triggers AbortError
+            try {
+                const startTime = Date.now();
+                await fetchWithTimeout('https://10.255.255.1', {}, 100);
+                assertOk("Test 9: fetchWithTimeout - Request aborts within timeout window", false, "Should have failed due to timeout");
+            } catch (err) {
+                const duration = Date.now() - startTime;
+                const isTimeoutError = err.message.includes('timed out') || err.message.includes('超時');
+                assertOk("Test 9: fetchWithTimeout - Request aborts within timeout window", isTimeoutError, `Error message: ${err.message}, Duration: ${duration}ms`);
+            }
+
+            // Test 10: ElevenLabs request parameter builder
+            try {
+                const payload = formatElevenLabsPayload("Hello world", "eleven_multilingual_v2", 0.6, 0.8);
+                const isValid = payload.text === "Hello world" &&
+                                payload.model_id === "eleven_multilingual_v2" &&
+                                payload.voice_settings.stability === 0.6 &&
+                                payload.voice_settings.similarity_boost === 0.8;
+                assertOk("Test 10: ElevenLabs request parameter builder", isValid, `Payload: ${JSON.stringify(payload, null, 2)}`);
+            } catch (e) {
+                assertOk("Test 10: ElevenLabs request parameter builder error", false, e.message);
+            }
+
+            // ==========================================================================
+            // RENDER TEST RESULT PANELS
+            // ==========================================================================
+            let passCount = 0;
+            let failCount = 0;
+            const container = document.getElementById('test-results-container');
+            container.innerHTML = '';
+            
+            assertions.forEach(test => {
+                if (test.status === 'pass') passCount++;
+                else failCount++;
+                
+                const card = document.createElement('div');
+                card.className = 'test-case';
+                card.innerHTML = `
+                    <div class="test-header">
+                        <span>${test.name}</span>
+                        <span class="test-status ${test.status}">${test.status}</span>
+                    </div>
+                    <div class="test-details">${test.details}</div>
+                `;
+                container.appendChild(card);
+            });
+            
+            document.getElementById('summary-pass-count').innerText = passCount;
+            document.getElementById('summary-fail-count').innerText = failCount;
+        }
+
+        runTestSuite();
+
+        // ==========================================================================
+        // AUDIO PLAYER HANDLER DIAGNOSTIC
+        // ==========================================================================
+        document.getElementById('test-audio-btn').addEventListener('click', () => {
+            const logBox = document.getElementById('audio-output-log');
+            logBox.innerText = "正在初始化語音合成器...";
+            
+            if (!window.speechSynthesis) {
+                logBox.innerHTML = "<span style='color:var(--danger)'>您的瀏覽器不支援 Web Speech API 語音合成。</span>";
+                return;
+            }
+            
+            speechSynthesis.cancel();
+            logBox.innerText = "發音 1: 英文名詞 (RAG, KV Cache)";
+            
+            // Bilingual Test speech scheduling
+            const engUtterance = new SpeechSynthesisUtterance("Testing TTS voice synthesis. This is a bilingual test: RAG and KV Cache are standard English terms.");
+            const voices = speechSynthesis.getVoices();
+            
+            // Match english voice
+            const engVoice = selectVoiceForSpeech(voices, 'en', 'host-a');
+            if (engVoice) engUtterance.voice = engVoice;
+            engUtterance.rate = 1.0;
+            engUtterance.pitch = 1.0;
+            
+            engUtterance.onend = () => {
+                logBox.innerText = "發音 2: 中文說明朗讀中...";
+                
+                const zhUtterance = new SpeechSynthesisUtterance("這是中文語音合成測試。我們已經成功在本地端調用 Speech Synthesis 發出聲音，通勤模式會依此排程播放教材。");
+                const zhVoice = selectVoiceForSpeech(voices, 'zh', 'host-b');
+                if (zhVoice) zhUtterance.voice = zhVoice;
+                zhUtterance.rate = 1.0;
+                zhUtterance.pitch = 1.0;
+                
+                zhUtterance.onend = () => {
+                    logBox.innerHTML = "<span style='color:var(--success)'><i class='fa-solid fa-circle-check'></i> 聲音測試完成！TTS 排程工作正常。</span>";
+                };
+                
+                zhUtterance.onerror = (err) => {
+                    logBox.innerText = `中文發音錯誤: ${err.error}`;
+                };
+                
+                speechSynthesis.speak(zhUtterance);
+            };
+            
+            engUtterance.onerror = (err) => {
+                logBox.innerText = `英文發音錯誤: ${err.error}`;
+            };
+            
+        });
+        
+        document.getElementById('stop-audio-btn').addEventListener('click', () => {
+            if (window.speechSynthesis) {
+                speechSynthesis.cancel();
+                document.getElementById('audio-output-log').innerText = "已停止播放。";
+            }
+        });
+    </script>
+</body>
+</html>

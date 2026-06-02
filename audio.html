@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧠 AI System Design Guide - 通勤聽書</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Page 3.5: Commute Audio Player -->
+            <section id="page-audio" class="page-section active">
+                <div class="audio-layout">
+                    <div class="audio-player-card" id="audio-player-card">
+                        <div class="player-visualizer">
+                            <div class="visualizer-disk" id="player-disk">
+                                <i class="fa-solid fa-brain"></i>
+                            </div>
+                            <div class="waves-container" id="waves-container">
+                                <span class="wave-bar bar-1"></span>
+                                <span class="wave-bar bar-2"></span>
+                                <span class="wave-bar bar-3"></span>
+                                <span class="wave-bar bar-4"></span>
+                                <span class="wave-bar bar-5"></span>
+                            </div>
+                        </div>
+
+                        <div class="player-track-info">
+                            <span class="badge" id="player-track-category" data-i18n="cat_all">所有類別</span>
+                            <h3 id="player-track-title" data-i18n="audio_idle_title">準備播音</h3>
+                            <p id="player-track-status" data-i18n="audio_idle_status">請選擇下方播放來源後，點擊播放鈕開始。</p>
+                        </div>
+
+                        <!-- Recall Timer Display -->
+                        <div class="recall-timer-bar" id="recall-timer-container" style="display: none;">
+                            <span class="recall-timer-text"><span data-i18n="recall_timer_label">主動回憶中...</span> <span id="recall-seconds-left">3s</span></span>
+                            <div class="recall-progress-bar">
+                                <div class="recall-progress-fill" id="recall-progress-fill" style="width: 100%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Dialogue Transcript Viewer (Hidden by default, shown in podcast/roleplay modes) -->
+                        <div class="player-transcript-container" id="player-transcript-panel" style="display: none;">
+                            <div class="transcript-scroll-area" id="transcript-dialogue-list">
+                                <!-- Populated dynamically by JS turns -->
+                            </div>
+                        </div>
+
+                        <div class="player-controls">
+                            <button class="player-btn control-secondary" id="audio-prev-btn" aria-label="Previous track">
+                                <i class="fa-solid fa-backward-step"></i>
+                            </button>
+                            <button class="player-btn control-primary" id="audio-play-btn" aria-label="Play or pause">
+                                <i class="fa-solid fa-play"></i>
+                            </button>
+                            <button class="player-btn control-secondary" id="audio-next-btn" aria-label="Next track">
+                                <i class="fa-solid fa-forward-step"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="audio-settings-card">
+                        <div class="panel-header">
+                            <h3 data-i18n="audio_settings_title">播音設定</h3>
+                        </div>
+                        <div class="audio-settings-body">
+                            <div class="input-field">
+                                <label data-i18n="audio_source_label">播音來源</label>
+                                <select id="audio-source-select">
+                                    <option value="flashcards" data-i18n="audio_source_flashcards">閃卡名詞定義 (英中雙語)</option>
+                                    <option value="interview" data-i18n="audio_source_interview">面試模擬 Q&A (英中雙語)</option>
+                                </select>
+                            </div>
+
+                            <div class="input-field mt-4">
+                                <label>播音模式 / Playback Mode</label>
+                                <select id="audio-style-select">
+                                    <option value="standard" selected>單人朗讀 (Standard)</option>
+                                    <option value="podcast">雙人 Podcast 漫談 (Bilingual Podcast)</option>
+                                    <option value="roleplay">面試角色扮演 (Interview Roleplay)</option>
+                                </select>
+                            </div>
+
+                            <div class="input-field mt-4">
+                                <label>語音合成引擎 / TTS Provider</label>
+                                <select id="audio-tts-provider-select">
+                                    <option value="webspeech" selected>瀏覽器內建語音 (Web Speech - 免費)</option>
+                                    <option value="gemini">Google Gemini 語音 (免費)</option>
+                                    <option value="openai">OpenAI TTS 語音 (付費)</option>
+                                    <option value="elevenlabs">ElevenLabs 語音 (付費)</option>
+                                </select>
+                            </div>
+
+                            <div class="input-field mt-4" id="voice-a-wrapper">
+                                <label>Speaker A 語音 (英文 / 主持 / 面試官)</label>
+                                <select id="audio-voice-a-select">
+                                    <!-- Populated dynamically by JS -->
+                                </select>
+                                <input type="text" id="audio-custom-voice-a-input" placeholder="貼上 ElevenLabs Voice ID..." class="mt-2" style="display: none;">
+                            </div>
+
+                            <div class="input-field mt-4" id="voice-b-wrapper">
+                                <label>Speaker B 語音 (中文 / 說明 / 回答者)</label>
+                                <select id="audio-voice-b-select">
+                                    <!-- Populated dynamically by JS -->
+                                </select>
+                                <input type="text" id="audio-custom-voice-b-input" placeholder="貼上 ElevenLabs Voice ID..." class="mt-2" style="display: none;">
+                            </div>
+
+                            <div class="ai-script-gen-section mt-4" id="ai-script-gen-wrapper" style="display: none;">
+                                <button class="primary-btn w-100" id="ai-script-gen-btn">
+                                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                    <span>生成 AI 客製劇本 / Gen AI Script</span>
+                                </button>
+                                <div class="script-gen-style-selector mt-2">
+                                    <label style="font-size:11px; color:var(--text-secondary); margin-bottom:4px; display:block;">劇本風格 / Script Tone</label>
+                                    <select id="ai-script-tone-select" style="padding: 6px; font-size: 11px;">
+                                        <option value="technical" selected>技術硬核 (Technical)</option>
+                                        <option value="humorous">幽默風趣 (Humorous)</option>
+                                        <option value="layman">通俗易懂 (Layman-friendly)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="input-field mt-4">
+                                <label data-i18n="audio_pause_label">回憶間隔 (Recall Delay)</label>
+                                <select id="audio-pause-select">
+                                    <option value="0">0s (直接朗讀)</option>
+                                    <option value="3" selected>3s (推薦 - 快速思考)</option>
+                                    <option value="5">5s (中等 - 單字思考)</option>
+                                    <option value="8">8s (長 - 問答思考)</option>
+                                </select>
+                            </div>
+
+                            <div class="input-field mt-4">
+                                <label data-i18n="audio_speed_label">語速調整</label>
+                                <select id="audio-speed-select">
+                                    <option value="0.8">0.8x (慢速學習)</option>
+                                    <option value="1.0" selected>1.0x (標準速度)</option>
+                                    <option value="1.2">1.2x (推薦 - 稍快記憶)</option>
+                                    <option value="1.5">1.5x (快速複習)</option>
+                                    <option value="1.8">1.8x (急速挑戰)</option>
+                                </select>
+                            </div>
+
+                            <div class="input-field mt-4">
+                                <label class="checkbox-setting-label">
+                                    <input type="checkbox" id="audio-split-checkbox">
+                                    <span data-i18n="audio_split_label">英中雙語分段朗讀 (實驗性 - 易有斷點)</span>
+                                </label>
+                            </div>
+
+                            <div class="input-field mt-4">
+                                <label class="checkbox-setting-label">
+                                    <input type="checkbox" id="audio-wakelock-checkbox" checked>
+                                    <span data-i18n="audio_wakelock_label">保持螢幕喚醒 (防止自動鎖屏)</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Global Application Scripts -->
+    <script src="layout.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

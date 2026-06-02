@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧠 AI System Design Guide - 閃卡複習</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Page 3: Flashcard Study Mode -->
+            <section id="page-flashcards" class="page-section active">
+                <div class="flashcards-container">
+                    <div class="flashcard-header-bar">
+                        <div class="flashcard-stats">
+                            <span id="flashcard-stats-text">已掌握：<span id="flashcard-mastered-count">0</span> / <span id="flashcard-total-count">0</span></span>
+                        </div>
+                        <div class="flashcard-actions">
+                            <button class="action-btn secondary" id="reset-flashcards-btn">
+                                <i class="fa-solid fa-arrows-rotate"></i> <span data-i18n="reset_cards_btn">重設卡片進度</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flashcard-workspace">
+                        <div class="flashcard-outer" id="flashcard-element">
+                            <div class="flashcard-inner">
+                                <!-- Front -->
+                                <div class="flashcard-front">
+                                    <span class="flashcard-tag" data-i18n="card_tag">名詞定義</span>
+                                    <h3 id="card-term">Agentic Coding</h3>
+                                    <p class="flashcard-hint" data-i18n="flip_hint"><i class="fa-solid fa-hand-pointer"></i> 點擊卡片以翻面查看定義</p>
+                                </div>
+                                <!-- Back -->
+                                <div class="flashcard-back">
+                                    <span class="flashcard-tag" data-i18n="card_tag">名詞定義</span>
+                                    <h3 id="card-term-back">Agentic Coding</h3>
+                                    <div class="card-definition-box">
+                                        <p id="card-definition">LLM autonomously editing files, running shell commands, writing tests and iterating until a coding task is complete.</p>
+                                    </div>
+                                    <div class="card-rate-actions" id="card-rate-buttons">
+                                        <button class="rate-btn fail" data-status="fail">
+                                            <i class="fa-solid fa-xmark"></i> <span data-i18n="rate_fail_btn">還不熟</span>
+                                        </button>
+                                        <button class="rate-btn pass" data-status="pass">
+                                            <i class="fa-solid fa-check"></i> <span data-i18n="rate_pass_btn">已掌握</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flashcard-navigation">
+                            <button class="nav-arrow" id="prev-card-btn" aria-label="Previous card">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </button>
+                            <span class="card-counter" id="card-counter-text">1 / 50</span>
+                            <button class="nav-arrow" id="next-card-btn" aria-label="Next card">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Global Application Scripts -->
+    <script src="layout.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧠 AI System Design Guide - 設定</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Page 4: Settings -->
+            <section id="page-settings" class="page-section active">
+                <div class="settings-layout">
+                    <div class="settings-group">
+                        <h3 data-i18n="api_config_title"><i class="fa-solid fa-key"></i> API 金鑰配置 (本機端安全儲存)</h3>
+                        <p class="settings-desc" data-i18n="api_config_desc">金鑰將儲存於您的瀏覽器本地快取 (localStorage) 中，直接與 API 端點發送請求，絕不上傳至任何第三方伺服器。</p>
+                        
+                        <div class="settings-row">
+                            <div class="input-field">
+                                <label for="api-provider-select" data-i18n="api_provider_label">模擬面試 AI 模型服務商</label>
+                                <select id="api-provider-select">
+                                    <option value="gemini">Google Gemini (推薦 - 2.5 Flash)</option>
+                                    <option value="openai">OpenAI (GPT-4o-mini)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="settings-row mt-4">
+                            <div class="input-field">
+                                <label for="gemini-key-input">Gemini API 金鑰 (API Key)</label>
+                                <div class="password-input-wrapper">
+                                    <input type="password" id="gemini-key-input" placeholder="輸入 Gemini API 金鑰...">
+                                    <button class="toggle-password" id="toggle-gemini-visibility" type="button" aria-label="Toggle visibility">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-row mt-4">
+                            <div class="input-field">
+                                <label for="openai-key-input">OpenAI API 金鑰 (API Key)</label>
+                                <div class="password-input-wrapper">
+                                    <input type="password" id="openai-key-input" placeholder="輸入 OpenAI API 金鑰...">
+                                    <button class="toggle-password" id="toggle-openai-visibility" type="button" aria-label="Toggle visibility">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-row mt-4">
+                            <div class="input-field">
+                                <label for="elevenlabs-key-input">ElevenLabs API 金鑰 (API Key)</label>
+                                <div class="password-input-wrapper">
+                                    <input type="password" id="elevenlabs-key-input" placeholder="輸入 ElevenLabs API 金鑰...">
+                                    <button class="toggle-password" id="toggle-elevenlabs-visibility" type="button" aria-label="Toggle visibility">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-actions">
+                            <button class="primary-btn" id="save-settings-btn" data-i18n="save_settings_btn">儲存設定</button>
+                            <span class="save-status-msg" id="save-status-msg"></span>
+                        </div>
+                    </div>
+
+                    <div class="settings-group mt-6">
+                        <h3 data-i18n="progress_management_title"><i class="fa-solid fa-arrows-spin"></i> 資料與學習紀錄管理</h3>
+                        <p class="settings-desc" data-i18n="progress_management_desc">您可以清除本機端儲存的所有學習紀錄，包含已讀狀態、卡片熟練度以及面試模擬分數。</p>
+                        
+                        <div class="settings-row">
+                            <button class="danger-btn" id="clear-progress-btn">
+                                <i class="fa-solid fa-trash-can"></i> <span data-i18n="clear_progress_btn">刪除本機學習紀錄</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Global Application Scripts -->
+    <script src="layout.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧠 AI System Design Guide - 教材閱讀</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Prism.js for Code Highlighting -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Page 1: Guide Reader -->
+            <section id="page-reader" class="page-section active">
+                <div class="reader-layout">
+                    <!-- Chapter List Panel -->
+                    <div class="chapter-nav-panel">
+                        <div class="panel-header">
+                            <h3 data-i18n="toc_title">章節目錄</h3>
+                        </div>
+                        <div class="chapter-list" id="chapter-list-container">
+                            <!-- Populated dynamically by JS -->
+                            <div class="skeleton-loader" style="height: 40px; margin-bottom: 8px;"></div>
+                            <div class="skeleton-loader" style="height: 40px; margin-bottom: 8px;"></div>
+                            <div class="skeleton-loader" style="height: 40px; margin-bottom: 8px;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Reader Workspace -->
+                    <div class="reader-workspace">
+                        <div class="reader-actions">
+                            <button id="mark-chapter-read-btn" class="action-btn secondary">
+                                <i class="fa-regular fa-circle-check"></i>
+                                <span data-i18n="mark_read_btn">標記為已讀</span>
+                            </button>
+                            <a id="github-link" href="#" target="_blank" class="action-btn text-link">
+                                <i class="fa-brands fa-github"></i>
+                                <span data-i18n="github_btn">在 GitHub 查看</span>
+                            </a>
+                        </div>
+                        <article class="markdown-body" id="reader-content">
+                            <!-- Populated dynamically by JS -->
+                            <div class="welcome-card">
+                                <h2>歡迎來到 AI 系統設計指南！</h2>
+                                <p>請從左側目錄中選擇一個章節開始閱讀。本教材涵蓋 RAG 架構、Agentic 系統、模型選擇、推論優化及實際面試案例。</p>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Required JS Libraries -->
+    <!-- Marked for MD rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <!-- Prism.js for code highlight -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+    
+    <!-- Mermaid for drawing charts -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: false,
+            theme: 'dark',
+            securityLevel: 'loose',
+            flowchart: { useMaxWidth: true, htmlLabels: true }
+        });
+    </script>
+    
+    <!-- Core Application JavaScript -->
+    <script src="layout.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
